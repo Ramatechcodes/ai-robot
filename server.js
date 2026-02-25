@@ -14,8 +14,18 @@ const path = require("path");
 // ================== APP SETUP ==================
 const app = express();
 const PORT = process.env.PORT || 3000;
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
 
-app.use(cors());
+
+// ================== CORS ==================
+const corsOptions = {
+  origin: "https://ai-robot-te9n.onrender.com", // your frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+};
+app.use(cors(corsOptions));
+
+app.use(cors(corsOptions)); // ✅ use configured CORS
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.static(path.join(__dirname, "frontend")));
@@ -317,7 +327,7 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
 
   res.json({
     message: "Uploaded",
-    url: `http://localhost:${PORT}/uploads/${req.file.filename}`
+    url: `${BASE_URL}/uploads/${req.file.filename}` // ✅ FIXED
   });
 });
 
@@ -344,7 +354,7 @@ app.post("/flutterwave/pay", auth, async (req, res) => {
         tx_ref,
         amount: 2000,
         currency: "NGN",
-        redirect_url: `http://localhost:8080?tx_ref=${tx_ref}`,
+        redirect_url: `${process.env.BASE_URL}/payment-success?tx_ref=${tx_ref}`,
         customer: { email: user.email },
         customizations: {
           title: "AI Robot Premium",
@@ -496,4 +506,6 @@ app.get("*", (req, res) => {
 
 
 // ================== START SERVER ==================
-app.listen(PORT, () => console.log(`🤖 Server running on http://localhost:${PORT}`));
+app.listen(PORT, () =>
+  console.log(`🤖 Server running on ${BASE_URL}`)
+);
