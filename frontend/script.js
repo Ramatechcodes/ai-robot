@@ -1,5 +1,5 @@
 /******************** CONFIG ********************/
-const API = "http://localhost:3000";
+const API = "https://ai-robot-te9n.onrender.com"; // replace with your actual backend Render URL
 const TOKEN_KEY = "token";
 const USER_KEY = () => `chats_current_user`;
 
