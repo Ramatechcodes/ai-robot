@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🤖 AI Robot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Math -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Code Highlight -->
+<link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="auth-container">
+  <div id="login-box" class="card">
+    <h2>Login</h2>
+    <input id="loginEmail" placeholder="Email">
+    <input id="loginPassword" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p onclick="showRegister()">Register</p>
+  </div>
+
+  <div id="register-box" class="card hidden">
+    <h2>Register</h2>
+    <input id="regEmail" placeholder="Email">
+    <input id="regPassword" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+  </div>
+
+  <div id="verify-box" class="card hidden">
+    <h2>Verify OTP</h2>
+    <input id="otpInput" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify</button>
+  </div>
+</div>
+
+<div id="robot-container">
+  
+<div id="chat-container" class="hidden">
+  <aside>
+    <button onclick="newChat()">➕ New Chat</button>
+    <div id="chatHistory"></div>
+  </aside>
+ 
+
+
+  <main>
+  <!-- FIXED HEADER -->
+  <header id="chat-header">
+    <div id="robotStatus">
+      <img id="robot-img" src="robot.jpg">
+      <span id="robotText">🤖 Idle</span>
+    </div>
+
+    <div id="profileInfo">
+      <img id="profileIcon" src="avatar.png" onclick="toggleProfileDropdown()">
+      <div id="profileDropdown" class="hidden">
+        <p id="profileEmail"></p>
+        <p id="profilePlan"></p>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div id="upgrade-container" style="position:relative; display:inline-block;">
+  <button onclick="toggleUpgradeDropdown()">Upgrade ⭐</button>
+ <div id="upgradeDropdown" class="hidden upgrade-box">
+  <h3>⭐ Upgrade to Premium</h3>
+  <ul>
+    <li>✅ Unlimited questions</li>
+    
+    <li>✅ Arabic & English voice</li>
+    <li>✅ Faster AI responses</li>
+    <li>✅ Priority access</li>
+  </ul>
+  <button onclick="startFlutterwaveUpgrade()">Pay Now</button>
+</div>
+
+</div>
+  </header>
+
+  <!-- MAP (fixed height, does not scroll page) -->
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
+
+  <!-- ✅ ONLY THIS SCROLLS -->
+  <div id="messages"></div>
+
+  <!-- FIXED INPUT -->
+  <footer id="chat-footer">
+    <textarea id="userInput" placeholder="Ask anything..."></textarea>
+
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="startSpeechRecognition('en-US')">🎤 EN</button>
+    <button onclick="startSpeechRecognition('ar-SA')">🎤 AR</button>
+    <button onclick="stopSpeechRecognition()">⏹</button>
+
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">📎</button>
+
+    <canvas id="micWave" width="200" height="40"></canvas>
+    <button onclick="toggleSpeechMute()">🔇</button>
+  </footer>
+</main>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
