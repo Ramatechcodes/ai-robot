@@ -22,7 +22,7 @@ html, body {
 .card {
   background: #fff;
   padding: 25px;
-  width: 300px;
+  width: 320px;
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0,0,0,.1);
 }
@@ -58,7 +58,7 @@ aside {
   padding: 10px;
   height: 100vh;
   overflow-y: auto;
-  transition: left 0.3s ease;
+  flex-shrink: 0;
 }
 
 aside button {
@@ -81,14 +81,14 @@ aside button {
   background: #1f2937;
 }
 
-/* ================== MAIN ================== */
+/* ================== MAIN LAYOUT ================== */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
+  min-height: 0; /* 🔑 critical */
   background: #f9f9f9;
-  position: relative;
 }
 
 /* ================== HEADER ================== */
@@ -96,10 +96,10 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 15px;
+  padding: 8px 14px;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  z-index: 20;
+  flex-shrink: 0;
 }
 
 /* ================== ROBOT ================== */
@@ -111,22 +111,14 @@ header {
 }
 
 #robot-img {
-  width: 50px;
-}
-
-.robot-speaking {
-  animation: talk 0.4s infinite alternate;
-}
-
-@keyframes talk {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
+  width: 42px;
 }
 
 /* ================== MAP ================== */
 #map-container {
-  height: 250px;
+  height: 200px;
   flex-shrink: 0;
+  border-bottom: 1px solid #ddd;
 }
 
 #map {
@@ -134,22 +126,26 @@ header {
   width: 100%;
 }
 
-/* ================== MESSAGES ================== */
+/* ================== MESSAGES (FULL PAGE) ================== */
 #messages {
   flex: 1;
-  padding: 20px;
+  min-height: 0;              /* 🔑 MOST IMPORTANT LINE */
   overflow-y: auto;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-
+  gap: 18px;
+  background: #f9f9f9;
 }
 
+/* BIG, READABLE MESSAGES */
 .message {
-  max-width: 75%;
-  padding: 12px;
-  border-radius: 12px;
-  line-height: 1.5;
+  max-width: 85%;
+  padding: 16px 18px;
+  border-radius: 14px;
+  line-height: 1.7;
+  font-size: 16px;
+  word-wrap: break-word;
 }
 
 .message.user {
@@ -162,19 +158,22 @@ header {
   align-self: flex-start;
 }
 
+/* CODE BLOCKS */
 .message pre {
   background: #0f172a;
   color: #e5e7eb;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 10px;
   overflow-x: auto;
+  font-size: 14px;
 }
 
-/* ================== FOOTER ================== */
+/* ================== FOOTER (SMALL & CLEAN) ================== */
 footer {
   display: flex;
+  align-items: center;
   gap: 6px;
-  padding: 10px;
+  padding: 6px;
   border-top: 1px solid #ddd;
   background: #fff;
   flex-shrink: 0;
@@ -182,15 +181,16 @@ footer {
 
 #userInput {
   flex: 1;
-  padding: 10px;
-  font-size: 16px;
+  padding: 8px;
+  font-size: 14px;
   resize: none;
-  max-height: 120px;
+  max-height: 70px;
   overflow-y: auto;
 }
 
 footer button {
-  padding: 10px;
+  padding: 6px 8px;
+  font-size: 14px;
   cursor: pointer;
 }
 
@@ -217,34 +217,17 @@ footer button {
   z-index: 9999;
 }
 
-/* ================== MENU BUTTON ================== */
-.menu-btn {
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* ================== TABLET & MOBILE ================== */
-@media screen and (max-width: 1024px) {
-  footer {
-    flex-wrap: wrap;
-  }
-}
-
-/* ================== MOBILE (ChatGPT STYLE) ================== */
+/* ================== MOBILE ================== */
 @media screen and (max-width: 768px) {
 
   #chat-container {
     flex-direction: column;
   }
 
-  /* Sidebar hidden by default */
   aside {
     position: fixed;
-    top: 0;
     left: -260px;
-    width: 250px;
+    top: 0;
     height: 100vh;
     z-index: 1000;
   }
@@ -253,33 +236,20 @@ footer button {
     left: 0;
   }
 
-  main {
-    width: 100%;
-  }
-
   header {
     flex-direction: row;
   }
 
+  #map-container {
+    height: 160px;
+  }
+
   #messages {
-    padding-bottom: 140px; /* prevent footer overlap */
+    padding: 18px;
   }
 
   footer {
-    position: fixed;
+    position: sticky;
     bottom: 0;
-    left: 0;
-    right: 0;
-    flex-wrap: wrap;
-    z-index: 999;
-  }
-
-  footer button,
-  #userInput {
-    flex: 1 1 48%;
-  }
-
-  #map-container {
-    height: 200px;
   }
 }
