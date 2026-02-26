@@ -5,6 +5,7 @@
 
 html, body {
   margin: 0;
+  padding: 0;
   height: 100%;
   font-family: "Segoe UI", Arial, sans-serif;
   background: #f4f6f8;
@@ -57,6 +58,7 @@ aside {
   padding: 10px;
   height: 100vh;
   overflow-y: auto;
+  transition: left 0.3s ease;
 }
 
 aside button {
@@ -66,6 +68,7 @@ aside button {
   background: #2563eb;
   border: none;
   color: #fff;
+  cursor: pointer;
 }
 
 .chat-item {
@@ -85,35 +88,70 @@ main {
   flex-direction: column;
   height: 100vh;
   background: #f9f9f9;
+  position: relative;
 }
 
 /* ================== HEADER ================== */
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 15px;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  z-index: 10;
+  z-index: 20;
 }
 
-/* ================== MESSAGES ================== */
+/* ================== ROBOT ================== */
+#robotStatus {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+#robot-img {
+  width: 50px;
+}
+
+.robot-speaking {
+  animation: talk 0.4s infinite alternate;
+}
+
+@keyframes talk {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* ================== MAP ================== */
+#map-container {
+  height: 250px;
+  flex-shrink: 0;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+/* ================== MESSAGES (EXPANDED) ================== */
 #messages {
   flex: 1;
-  padding: 16px;
+  padding: 22px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 
-  /* IMPORTANT FIX */
-  padding-bottom: 110px; /* space for footer */
+  /* 🔥 key line: gives full reading space */
+  padding-bottom: 160px;
 }
 
 .message {
-  max-width: 85%;
-  padding: 12px;
+  max-width: 75%;
+  padding: 14px;
   border-radius: 12px;
   line-height: 1.6;
-  word-wrap: break-word;
 }
 
 .message.user {
@@ -136,32 +174,27 @@ header {
 
 /* ================== FOOTER (COMPACT) ================== */
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 250px;
-  right: 0;
-  background: #fff;
-  border-top: 1px solid #ddd;
-  padding: 6px;
   display: flex;
   gap: 4px;
-  z-index: 999;
+  padding: 6px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  flex-shrink: 0;
 }
 
-/* Input smaller */
 #userInput {
   flex: 1;
   padding: 8px;
   font-size: 14px;
-  max-height: 70px;
   resize: none;
+  max-height: 70px;
+  overflow-y: auto;
 }
 
-/* Buttons smaller */
 footer button {
   padding: 6px 8px;
   font-size: 14px;
-  white-space: nowrap;
+  cursor: pointer;
 }
 
 /* ================== DROPDOWNS ================== */
@@ -183,11 +216,26 @@ footer button {
   top: 45px;
   width: 200px;
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.15);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
   z-index: 9999;
 }
 
-/* ================== MOBILE (CHATGPT STYLE) ================== */
+/* ================== MENU BUTTON ================== */
+.menu-btn {
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* ================== TABLET & MOBILE ================== */
+@media screen and (max-width: 1024px) {
+  footer {
+    flex-wrap: wrap;
+  }
+}
+
+/* ================== MOBILE (ChatGPT STYLE) ================== */
 @media screen and (max-width: 768px) {
 
   #chat-container {
@@ -201,40 +249,39 @@ footer button {
     width: 250px;
     height: 100vh;
     z-index: 1000;
-    transition: left 0.3s ease;
   }
 
   aside.open {
     left: 0;
   }
 
-  footer {
-    left: 0;
-    flex-wrap: wrap;
+  main {
+    width: 100%;
+  }
+
+  header {
+    flex-direction: row;
   }
 
   #messages {
-    padding-bottom: 130px; /* mobile footer height */
+    padding-bottom: 180px;
   }
 
-  footer button {
-    font-size: 13px;
-    padding: 6px;
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-wrap: wrap;
+    z-index: 999;
   }
 
+  footer button,
   #userInput {
-    font-size: 14px;
-    max-height: 60px;
-  }
-}
-
-/* ================== SMALL MOBILE ================== */
-@media screen and (max-width: 480px) {
-  footer button {
-    font-size: 12px;
+    flex: 1 1 48%;
   }
 
-  #userInput {
-    font-size: 13px;
+  #map-container {
+    height: 200px;
   }
 }
