@@ -9,6 +9,7 @@ html, body {
   height: 100%;
   font-family: "Segoe UI", Arial, sans-serif;
   background: #f4f6f8;
+  overflow: hidden;
 }
 
 /* ================== AUTH ================== */
@@ -88,18 +89,19 @@ main {
   flex-direction: column;
   height: 100vh;
   background: #f9f9f9;
-  position: relative;
+  overflow: hidden;
 }
 
 /* ================== HEADER ================== */
 header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 15px;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  z-index: 20;
+  z-index: 10;
 }
 
 /* ================== ROBOT ================== */
@@ -125,7 +127,7 @@ header {
 
 /* ================== MAP ================== */
 #map-container {
-  height: 250px;
+  height: 220px;
   flex-shrink: 0;
 }
 
@@ -134,24 +136,24 @@ header {
   width: 100%;
 }
 
-/* ================== MESSAGES (EXPANDED) ================== */
+/* ================== MESSAGES (FULL PAGE FIX) ================== */
 #messages {
   flex: 1;
+  min-height: 0;            /* 🔥 CRITICAL FIX */
   padding: 22px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
-
-  /* 🔥 key line: gives full reading space */
-  padding-bottom: 160px;
+  padding-bottom: 140px;    /* space for footer */
 }
 
 .message {
-  max-width: 75%;
+  max-width: 78%;
   padding: 14px;
   border-radius: 12px;
-  line-height: 1.6;
+  line-height: 1.7;
+  word-wrap: break-word;
 }
 
 .message.user {
@@ -167,19 +169,19 @@ header {
 .message pre {
   background: #0f172a;
   color: #e5e7eb;
-  padding: 12px;
+  padding: 14px;
   border-radius: 8px;
   overflow-x: auto;
 }
 
-/* ================== FOOTER (COMPACT) ================== */
+/* ================== FOOTER (SMALL & FIXED) ================== */
 footer {
+  flex-shrink: 0;
   display: flex;
-  gap: 4px;
+  gap: 6px;
   padding: 6px;
   border-top: 1px solid #ddd;
   background: #fff;
-  flex-shrink: 0;
 }
 
 #userInput {
@@ -192,7 +194,7 @@ footer {
 }
 
 footer button {
-  padding: 6px 8px;
+  padding: 6px 10px;
   font-size: 14px;
   cursor: pointer;
 }
@@ -228,19 +230,8 @@ footer button {
   cursor: pointer;
 }
 
-/* ================== TABLET & MOBILE ================== */
-@media screen and (max-width: 1024px) {
-  footer {
-    flex-wrap: wrap;
-  }
-}
-
-/* ================== MOBILE (ChatGPT STYLE) ================== */
+/* ================== MOBILE ================== */
 @media screen and (max-width: 768px) {
-
-  #chat-container {
-    flex-direction: column;
-  }
 
   aside {
     position: fixed;
@@ -255,16 +246,8 @@ footer button {
     left: 0;
   }
 
-  main {
-    width: 100%;
-  }
-
-  header {
-    flex-direction: row;
-  }
-
   #messages {
-    padding-bottom: 180px;
+    padding-bottom: 170px;
   }
 
   footer {
@@ -272,8 +255,8 @@ footer button {
     bottom: 0;
     left: 0;
     right: 0;
-    flex-wrap: wrap;
     z-index: 999;
+    flex-wrap: wrap;
   }
 
   footer button,
@@ -282,6 +265,6 @@ footer button {
   }
 
   #map-container {
-    height: 200px;
+    height: 180px;
   }
 }
