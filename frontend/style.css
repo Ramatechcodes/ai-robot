@@ -3,8 +3,10 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%;
   font-family: "Segoe UI", Arial, sans-serif;
   background: #f4f6f8;
 }
@@ -15,7 +17,6 @@ body {
   justify-content: center;
   align-items: flex-start;
   padding-top: 50px;
-  height: auto;
 }
 
 .card {
@@ -56,9 +57,8 @@ aside {
   color: #fff;
   padding: 10px;
   height: 100vh;
-  position: sticky;
-  top: 0;
   overflow-y: auto;
+  transition: left 0.3s ease;
 }
 
 aside button {
@@ -81,14 +81,14 @@ aside button {
   background: #1f2937;
 }
 
-/* ================== MAIN CHAT AREA ================== */
+/* ================== MAIN ================== */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  position: relative;
   background: #f9f9f9;
+  position: relative;
 }
 
 /* ================== HEADER ================== */
@@ -99,10 +99,10 @@ header {
   padding: 10px 15px;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  z-index: 10;
+  z-index: 20;
 }
 
-/* ================== ROBOT STATUS ================== */
+/* ================== ROBOT ================== */
 #robotStatus {
   display: flex;
   align-items: center;
@@ -112,15 +112,10 @@ header {
 
 #robot-img {
   width: 50px;
-  transition: transform 0.3s;
 }
 
 .robot-speaking {
   animation: talk 0.4s infinite alternate;
-}
-
-.robot-eyes {
-  animation: blink 4s infinite;
 }
 
 @keyframes talk {
@@ -128,16 +123,21 @@ header {
   to { transform: scale(1.1); }
 }
 
-@keyframes blink {
-  0%, 90%, 100% { opacity: 1; }
-  95% { opacity: 0; }
+/* ================== MAP ================== */
+#map-container {
+  height: 250px;
+  flex-shrink: 0;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
 }
 
 /* ================== MESSAGES ================== */
 #messages {
   flex: 1;
   padding: 15px;
-  background: #f4f6f8;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -147,7 +147,6 @@ header {
 .message {
   max-width: 75%;
   padding: 12px;
-  margin-bottom: 12px;
   border-radius: 12px;
   line-height: 1.5;
 }
@@ -173,17 +172,11 @@ header {
 /* ================== FOOTER ================== */
 footer {
   display: flex;
-  gap: 5px;
+  gap: 6px;
   padding: 10px;
   border-top: 1px solid #ddd;
   background: #fff;
   flex-shrink: 0;
-  position: fixed;
-  bottom: 0;
-  left: 250px;
-  right: 0;
-  z-index: 999;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
 
 #userInput {
@@ -191,14 +184,13 @@ footer {
   padding: 10px;
   font-size: 16px;
   resize: none;
-  max-height: 100px;
+  max-height: 120px;
   overflow-y: auto;
 }
 
 footer button {
   padding: 10px;
   cursor: pointer;
-  flex-shrink: 0;
 }
 
 /* ================== DROPDOWNS ================== */
@@ -206,99 +198,58 @@ footer button {
   display: none;
 }
 
-#profileDropdown, .upgrade-box {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  position: absolute;
-  right: 10px;
-  top: 45px;
-  width: 200px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.2);
-}
-
-#upgrade-container {
-  position: relative;
-}
-
 #profileInfo {
   position: relative;
 }
 
-#profileDropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
+#profileDropdown,
+.upgrade-box {
   background: #fff;
   border: 1px solid #ddd;
   padding: 10px;
-  border-radius: 8px;
+  position: absolute;
+  right: 0;
+  top: 45px;
   width: 200px;
-  z-index: 9999;
+  border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  z-index: 9999;
 }
 
-/* ================== MEDIA QUERIES ================== */
+/* ================== MENU BUTTON ================== */
+.menu-btn {
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
 
-/* Tablets (width <= 1024px) */
+/* ================== TABLET & MOBILE ================== */
 @media screen and (max-width: 1024px) {
-  #chat-container {
-    flex-direction: column;
-    height: auto;
-  }
-
-  aside {
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 5px;
-    height: auto;
-  }
-
   footer {
-    left: 0;
-  }
-
-  .chat-item {
-    flex: 1;
-    min-width: 100px;
-    margin-right: 5px;
-  }
-
-  main {
-    flex: 1;
-    height: auto;
-  }
-
-  footer button, #userInput {
-    flex: 1 1 48%;
-    margin-bottom: 5px;
+    flex-wrap: wrap;
   }
 }
 
-/* Mobile (width <= 768px) */
+/* ================== MOBILE (ChatGPT STYLE) ================== */
 @media screen and (max-width: 768px) {
-  #auth-container {
-    padding: 20px;
-  }
-
-  .card {
-    width: 90%;
-    padding: 20px;
-  }
 
   #chat-container {
     flex-direction: column;
   }
 
+  /* Sidebar hidden by default */
   aside {
-    width: 100%;
-    height: auto;
-    display: flex;
-    overflow-x: auto;
-    padding: 5px;
-    background: #111827;
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 250px;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  aside.open {
+    left: 0;
   }
 
   main {
@@ -306,52 +257,28 @@ footer button {
   }
 
   header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #profileInfo, #upgrade-container {
-    margin-top: 10px;
-  }
-
-  footer {
-    flex-direction: column;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-
-  footer button, #userInput {
-    flex: 1 1 100%;
+    flex-direction: row;
   }
 
   #messages {
-    padding: 10px;
-    gap: 8px;
+    padding-bottom: 90px; /* prevent footer overlap */
   }
 
-  #map {
-    height: 200px;
-  }
-}
-
-/* Small mobile (width <= 480px) */
-@media screen and (max-width: 480px) {
-  .card {
-    width: 95%;
-    padding: 15px;
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-wrap: wrap;
+    z-index: 999;
   }
 
+  footer button,
   #userInput {
-    font-size: 14px;
+    flex: 1 1 48%;
   }
 
-  footer button {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  #map {
-    height: 150px;
+  #map-container {
+    height: 200px;
   }
 }
