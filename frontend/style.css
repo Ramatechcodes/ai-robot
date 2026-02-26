@@ -5,7 +5,6 @@
 
 html, body {
   margin: 0;
-  padding: 0;
   height: 100%;
   font-family: "Segoe UI", Arial, sans-serif;
   background: #f4f6f8;
@@ -58,7 +57,6 @@ aside {
   padding: 10px;
   height: 100vh;
   overflow-y: auto;
-  transition: left 0.3s ease;
 }
 
 aside button {
@@ -68,7 +66,6 @@ aside button {
   background: #2563eb;
   border: none;
   color: #fff;
-  cursor: pointer;
 }
 
 .chat-item {
@@ -88,67 +85,35 @@ main {
   flex-direction: column;
   height: 100vh;
   background: #f9f9f9;
-  position: relative;
 }
 
 /* ================== HEADER ================== */
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 10px 15px;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  z-index: 20;
-}
-
-/* ================== ROBOT ================== */
-#robotStatus {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: bold;
-}
-
-#robot-img {
-  width: 50px;
-}
-
-.robot-speaking {
-  animation: talk 0.4s infinite alternate;
-}
-
-@keyframes talk {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
-}
-
-/* ================== MAP ================== */
-#map-container {
-  height: 250px;
-  flex-shrink: 0;
-}
-
-#map {
-  height: 100%;
-  width: 100%;
+  z-index: 10;
 }
 
 /* ================== MESSAGES ================== */
 #messages {
   flex: 1;
-  padding: 15px;
+  padding: 16px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  /* IMPORTANT FIX */
+  padding-bottom: 110px; /* space for footer */
 }
 
 .message {
-  max-width: 75%;
+  max-width: 85%;
   padding: 12px;
   border-radius: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
+  word-wrap: break-word;
 }
 
 .message.user {
@@ -169,28 +134,34 @@ header {
   overflow-x: auto;
 }
 
-/* ================== FOOTER ================== */
+/* ================== FOOTER (COMPACT) ================== */
 footer {
-  display: flex;
-  gap: 6px;
-  padding: 10px;
-  border-top: 1px solid #ddd;
+  position: fixed;
+  bottom: 0;
+  left: 250px;
+  right: 0;
   background: #fff;
-  flex-shrink: 0;
+  border-top: 1px solid #ddd;
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+  z-index: 999;
 }
 
+/* Input smaller */
 #userInput {
   flex: 1;
-  padding: 10px;
-  font-size: 16px;
+  padding: 8px;
+  font-size: 14px;
+  max-height: 70px;
   resize: none;
-  max-height: 120px;
-  overflow-y: auto;
 }
 
+/* Buttons smaller */
 footer button {
-  padding: 10px;
-  cursor: pointer;
+  padding: 6px 8px;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 /* ================== DROPDOWNS ================== */
@@ -212,33 +183,17 @@ footer button {
   top: 45px;
   width: 200px;
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 15px rgba(0,0,0,.15);
   z-index: 9999;
 }
 
-/* ================== MENU BUTTON ================== */
-.menu-btn {
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* ================== TABLET & MOBILE ================== */
-@media screen and (max-width: 1024px) {
-  footer {
-    flex-wrap: wrap;
-  }
-}
-
-/* ================== MOBILE (ChatGPT STYLE) ================== */
+/* ================== MOBILE (CHATGPT STYLE) ================== */
 @media screen and (max-width: 768px) {
 
   #chat-container {
     flex-direction: column;
   }
 
-  /* Sidebar hidden by default */
   aside {
     position: fixed;
     top: 0;
@@ -246,39 +201,40 @@ footer button {
     width: 250px;
     height: 100vh;
     z-index: 1000;
+    transition: left 0.3s ease;
   }
 
   aside.open {
     left: 0;
   }
 
-  main {
-    width: 100%;
-  }
-
-  header {
-    flex-direction: row;
+  footer {
+    left: 0;
+    flex-wrap: wrap;
   }
 
   #messages {
-    padding-bottom: 90px; /* prevent footer overlap */
+    padding-bottom: 130px; /* mobile footer height */
   }
 
-  footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    flex-wrap: wrap;
-    z-index: 999;
+  footer button {
+    font-size: 13px;
+    padding: 6px;
   }
 
-  footer button,
   #userInput {
-    flex: 1 1 48%;
+    font-size: 14px;
+    max-height: 60px;
+  }
+}
+
+/* ================== SMALL MOBILE ================== */
+@media screen and (max-width: 480px) {
+  footer button {
+    font-size: 12px;
   }
 
-  #map-container {
-    height: 200px;
+  #userInput {
+    font-size: 13px;
   }
 }
