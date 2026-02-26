@@ -11,6 +11,7 @@ let currentPlan = "free";
 let freeLimitReached = false;
 let questionsAsked = 0;
 let uploadsDone = 0;
+let lastAIReply = "";
 
 let tempEmail = "";
 let audioContext, analyser, dataArray, source, stream, animationId;
@@ -31,6 +32,9 @@ const otpInput = document.getElementById("otpInput");
 const userInput = document.getElementById("userInput");
 const fileInput = document.getElementById("fileInput");
  const robot = document.getElementById("robotStatus");
+ const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.querySelector("aside");
+
 
 /******************** AUTH UI ********************/
 /******************** AUTH UI ********************/
@@ -247,6 +251,7 @@ function checkFreeLimits() {
     : "";
 }
 
+
 /******************** CHAT ********************/
 async function sendMessage() {
   if (currentPlan === "free" && freeLimitReached) return toggleUpgradeDropdown();
@@ -292,7 +297,11 @@ const cleanReply = (data.reply || data.message || "provided on request")
 
 
 renderAIContent(cleanReply);
-speakText(cleanReply);
+lastAIReply = cleanReply;
+
+if (!/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+  speakText(cleanReply); // auto speak only on PC
+}
 if (window.Prism) Prism.highlightAll();
 if (window.MathJax) {
   MathJax.typesetPromise();
@@ -591,6 +600,21 @@ userInput.addEventListener("input", () => {
   userInput.style.height = "auto";
   userInput.style.height = userInput.scrollHeight + "px";
 });
+
+menuBtn.addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+});
+
+function speakLast() {
+  if (!lastAIReply || isMuted) return;
+
+  speechSynthesis.cancel();
+
+  const u = new SpeechSynthesisUtterance(lastAIReply);
+  u.lang = /[\u0600-\u06FF]/.test(lastAIReply) ? "ar-SA" : "en-US";
+
+  speechSynthesis.speak(u);
+}
 /******************** FLUTTERWAVE ********************/
 async function startFlutterwaveUpgrade() {
   const token = localStorage.getItem(TOKEN_KEY);
