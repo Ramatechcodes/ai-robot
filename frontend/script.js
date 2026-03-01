@@ -34,6 +34,7 @@ const fileInput = document.getElementById("fileInput");
  const robot = document.getElementById("robotStatus");
  const menuBtn = document.getElementById("menuBtn");
 const sidebar = document.querySelector("aside");
+const robotText = document.getElementById("robotText");
 
 
 /******************** AUTH UI ********************/
@@ -140,11 +141,11 @@ function toggleUpgradeDropdown() {
   if (dropdown) dropdown.classList.toggle("hidden");
 }
 function safeRender(text) {
+  // Allow SVG diagrams
+  if (text.includes("<svg")) return text;
+
   return text
-    .replace(/\*\*/g, "")   // ← remove stars
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+    .replace(/\*\*/g, "")
     .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>")
     .replace(/\n/g, "<br>");
 }
@@ -559,6 +560,7 @@ function cleanupAudio() {
   if (canvas) canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 }
 
+
 /******************** TEXT-TO-SPEECH ********************/
 let isSpeakingEnabled = true; // default ON
 
@@ -567,10 +569,10 @@ function toggleSpeechMute() {
 
   if (isMuted) {
     speechSynthesis.pause();
-    robot.innerText = "🤖 Muted";
+    robotText.innerText = "🤖 Muted";
     document.getElementById("robot-img").classList.remove("robot-speaking");
   } else {
-    robot.innerText = "🤖 Speaking...";
+    robotText.innerText = "🤖 Speaking...";
     speechSynthesis.resume();
     document.getElementById("robot-img").classList.add("robot-speaking");
   }
@@ -585,12 +587,12 @@ function speakText(text) {
   currentUtterance.lang = /[\u0600-\u06FF]/.test(text) ? "ar-SA" : "en-US";
 
   currentUtterance.onstart = () => {
-    robot.innerText = "🤖 Speaking...";
+    robotText.innerText = "🤖 Speaking...";
     robotImg.classList.add("robot-speaking");
   };
 
   currentUtterance.onend = () => {
-    robot.innerText = "🤖 Idle";
+    robotText.innerText = "🤖 Idle";
     robotImg.classList.remove("robot-speaking");
   };
 
@@ -600,21 +602,6 @@ userInput.addEventListener("input", () => {
   userInput.style.height = "auto";
   userInput.style.height = userInput.scrollHeight + "px";
 });
-
-menuBtn.addEventListener("click", () => {
-  sidebar.classList.toggle("open");
-});
-
-function speakLast() {
-  if (!lastAIReply || isMuted) return;
-
-  speechSynthesis.cancel();
-
-  const u = new SpeechSynthesisUtterance(lastAIReply);
-  u.lang = /[\u0600-\u06FF]/.test(lastAIReply) ? "ar-SA" : "en-US";
-
-  speechSynthesis.speak(u);
-}
 /******************** FLUTTERWAVE ********************/
 async function startFlutterwaveUpgrade() {
   const token = localStorage.getItem(TOKEN_KEY);
