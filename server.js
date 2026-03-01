@@ -93,14 +93,13 @@ app.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const { data: exists } = await supabase
-      .from("users")
-      .select("id")
-      .eq("email", email)
-      .single();
+    const { data: exists, error } = await supabase
+  .from("users")
+  .select("id")
+  .eq("email", email)
+  .maybeSingle();
 
-    if (exists) return res.json({ message: "Email already registered" });
-
+if (exists) return res.json({ message: "Email already registered" });
     const hashed = await bcrypt.hash(password, 10);
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -137,22 +136,21 @@ app.post("/register", async (req, res) => {
 app.post("/verify", async (req, res) => {
   try {
     const { email, otp } = req.body;
+const { data: otpRow, error } = await supabase
+  .from("otp_codes")
+  .select("*")
+  .eq("email", email)
+  .eq("otp", otp)
+  .gt("expires_at", new Date().toISOString())
+  .maybeSingle();
 
-    const { data } = await supabase
-      .from("otp_codes")
-      .select("*")
-      .eq("email", email)
-      .eq("otp", otp)
-      .gt("expires_at", new Date().toISOString())
-      .single();
+if (!otpRow)
+  return res.status(400).json({ message: "Invalid or expired OTP" });
 
-    if (!data)
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+await supabase.from("users").update({ verified: true }).eq("email", email);
+await supabase.from("otp_codes").delete().eq("email", email);
 
-    await supabase.from("users").update({ verified: true }).eq("email", email);
-    await supabase.from("otp_codes").delete().eq("email", email);
-
-    res.json({ message: "Email verified successfully ✅" });
+res.json({ message: "Email verified successfully ✅" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Verification failed" });
