@@ -35,6 +35,9 @@ const fileInput = document.getElementById("fileInput");
  const menuBtn = document.getElementById("menuBtn");
 const sidebar = document.querySelector("aside");
 const robotText = document.getElementById("robotText");
+menuBtn.addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+});
 
 
 /******************** AUTH UI ********************/
@@ -90,6 +93,8 @@ async function login() {
 
     // ✅ Hide auth page & show chat page
     showChatPage();
+
+   
 
     // Load user info & chat history
     await loadUserProfile();
