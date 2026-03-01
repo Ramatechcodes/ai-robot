@@ -13,10 +13,10 @@ html, body {
 
 /* ================== AUTH ================== */
 #auth-container {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 50px;
+  align-items: center;
 }
 
 .card {
@@ -43,7 +43,7 @@ html, body {
   cursor: pointer;
 }
 
-/* ================== CHAT CONTAINER ================== */
+/* ================== CHAT ROOT ================== */
 #chat-container {
   display: flex;
   height: 100vh;
@@ -52,11 +52,10 @@ html, body {
 
 /* ================== SIDEBAR ================== */
 aside {
-  width: 250px;
+  width: 260px;
   background: #111827;
   color: #fff;
   padding: 10px;
-  height: 100vh;
   overflow-y: auto;
   flex-shrink: 0;
 }
@@ -81,25 +80,25 @@ aside button {
   background: #1f2937;
 }
 
-/* ================== MAIN LAYOUT ================== */
+/* ================== MAIN ================== */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 0; /* 🔑 critical */
+  min-height: 0; /* 🔑 CRITICAL */
   background: #f9f9f9;
 }
 
 /* ================== HEADER ================== */
 header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 14px;
   background: #fff;
   border-bottom: 1px solid #ddd;
-  flex-shrink: 0;
 }
 
 /* ================== ROBOT ================== */
@@ -122,23 +121,23 @@ header {
 }
 
 #map {
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 
-/* ================== MESSAGES (FULL PAGE) ================== */
+/* ================== MESSAGES (FULL SCREEN) ================== */
 #messages {
   flex: 1;
-  min-height: 0;              /* 🔑 MOST IMPORTANT LINE */
+  min-height: 0;          /* 🔑 MOST IMPORTANT */
   overflow-y: auto;
   padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  background: #f9f9f9;
+  background: #f9fafb;
 }
 
-/* BIG, READABLE MESSAGES */
+/* ================== MESSAGE BUBBLES ================== */
 .message {
   max-width: 85%;
   padding: 16px 18px;
@@ -158,7 +157,7 @@ header {
   align-self: flex-start;
 }
 
-/* CODE BLOCKS */
+/* ================== CODE ================== */
 .message pre {
   background: #0f172a;
   color: #e5e7eb;
@@ -168,15 +167,24 @@ header {
   font-size: 14px;
 }
 
-/* ================== FOOTER (SMALL & CLEAN) ================== */
+/* ================== IMAGES / DIAGRAMS ================== */
+.message img,
+.message svg {
+  max-width: 100%;
+  display: block;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/* ================== FOOTER ================== */
 footer {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px;
   border-top: 1px solid #ddd;
   background: #fff;
-  flex-shrink: 0;
 }
 
 #userInput {
@@ -196,7 +204,7 @@ footer button {
 
 /* ================== DROPDOWNS ================== */
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 #profileInfo {
@@ -218,34 +226,22 @@ footer button {
 }
 
 /* ================== MOBILE ================== */
-@media screen and (max-width: 768px) {
-
-  #chat-container {
-    flex-direction: column;
-  }
-
+@media (max-width: 768px) {
   aside {
     position: fixed;
     left: -260px;
     top: 0;
     height: 100vh;
     z-index: 1000;
+    transition: left 0.3s ease;
   }
 
   aside.open {
     left: 0;
   }
 
-  header {
-    flex-direction: row;
-  }
-
   #map-container {
-    height: 160px;
-  }
-
-  #messages {
-    padding: 18px;
+    display: none; /* ChatGPT behavior */
   }
 
   footer {
