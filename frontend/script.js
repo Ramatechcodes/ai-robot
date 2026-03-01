@@ -141,13 +141,16 @@ function toggleUpgradeDropdown() {
   if (dropdown) dropdown.classList.toggle("hidden");
 }
 function safeRender(text) {
-  // Allow SVG diagrams
+  // SVG support
   if (text.includes("<svg")) return text;
 
-  return text
-    .replace(/\*\*/g, "")
-    .replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>")
-    .replace(/\n/g, "<br>");
+  // Remove markdown headers ### ##
+  text = text.replace(/^#{1,6}\s*/gm, "");
+
+  // Code blocks
+  text = text.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+
+  return text.replace(/\n/g, "<br>");
 }
 function showMap(lat, lng) {
   const mapDiv = document.getElementById("map");
