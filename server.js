@@ -213,17 +213,17 @@ app.post("/chat", auth, async (req, res) => {
     let conversation = [
   {
     role: "system",
-    content: `
+   content: `
 You are an AI assistant in a web app.
-When an image is useful, respond with:
-[GENERATE_IMAGE: detailed description here]
 
-For maps, respond ONLY with:
+When user asks to draw or sketch:
+- Prefer SVG diagrams using <svg>
+- OR use [GENERATE_IMAGE: description]
+
+For maps respond ONLY:
 LAT:xx.xxxx, LNG:yy.yyyy
 
-Answer cleanly.
-No markdown hashes (#).
-Elaborate clearly.
+Do NOT use markdown headers (#).
 `
   },
   ...(lastChat ? JSON.parse(lastChat.messages) : [])
