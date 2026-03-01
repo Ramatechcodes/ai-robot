@@ -27,22 +27,6 @@ html, body {
   box-shadow: 0 10px 25px rgba(0,0,0,.1);
 }
 
-.card input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-}
-
-.card button {
-  width: 100%;
-  padding: 12px;
-  background: #4caf50;
-  border: none;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 /* ================== CHAT ROOT ================== */
 #chat-container {
   display: flex;
@@ -58,6 +42,7 @@ aside {
   padding: 10px;
   overflow-y: auto;
   flex-shrink: 0;
+  transition: left .3s ease;
 }
 
 aside button {
@@ -70,81 +55,94 @@ aside button {
   cursor: pointer;
 }
 
-.chat-item {
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.chat-item:hover {
-  background: #1f2937;
-}
-
 /* ================== MAIN ================== */
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0; /* 🔑 CRITICAL */
+  min-height: 0;
   background: #f9f9f9;
 }
 
 /* ================== HEADER ================== */
 header {
-  flex-shrink: 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 8px 14px;
+  gap: 8px;
+  padding: 6px 10px;
   background: #fff;
   border-bottom: 1px solid #ddd;
 }
 
-/* ================== ROBOT ================== */
 #robotStatus {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   font-weight: bold;
 }
 
 #robot-img {
-  width: 42px;
+  width: 36px;
+}
+
+/* Right side controls */
+#profileInfo,
+#upgrade-container {
+  position: relative;
+}
+
+#profileIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Push right */
+header > *:nth-child(2) {
+  margin-left: auto;
+}
+
+/* ================== DROPDOWNS ================== */
+.hidden {
+  display: none !important;
+}
+
+#profileDropdown,
+.upgrade-box {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  width: 200px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.15);
+  z-index: 2000;
 }
 
 /* ================== MAP ================== */
 #map-container {
   height: 200px;
   flex-shrink: 0;
-  border-bottom: 1px solid #ddd;
 }
 
-#map {
-  width: 100%;
-  height: 100%;
-}
-
-/* ================== MESSAGES (FULL SCREEN) ================== */
+/* ================== MESSAGES ================== */
 #messages {
   flex: 1;
-  min-height: 0;          /* 🔑 MOST IMPORTANT */
   overflow-y: auto;
-  padding: 24px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  background: #f9fafb;
+  gap: 14px;
 }
 
-/* ================== MESSAGE BUBBLES ================== */
+/* ================== MESSAGE ================== */
 .message {
   max-width: 85%;
-  padding: 16px 18px;
-  border-radius: 14px;
-  line-height: 1.7;
-  font-size: 16px;
-  word-wrap: break-word;
+  padding: 14px;
+  border-radius: 12px;
+  line-height: 1.6;
 }
 
 .message.user {
@@ -157,30 +155,10 @@ header {
   align-self: flex-start;
 }
 
-/* ================== CODE ================== */
-.message pre {
-  background: #0f172a;
-  color: #e5e7eb;
-  padding: 14px;
-  border-radius: 10px;
-  overflow-x: auto;
-  font-size: 14px;
-}
-
-/* ================== IMAGES / DIAGRAMS ================== */
-.message img,
-.message svg {
-  max-width: 100%;
-  display: block;
-  margin-top: 10px;
-  border-radius: 8px;
-}
-
 /* ================== FOOTER ================== */
 footer {
-  flex-shrink: 0;
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
   padding: 6px;
   border-top: 1px solid #ddd;
@@ -188,41 +166,17 @@ footer {
 }
 
 #userInput {
-  flex: 1;
-  padding: 8px;
-  font-size: 14px;
+  flex: 1 1 100%;
   resize: none;
-  max-height: 70px;
-  overflow-y: auto;
+  padding: 8px;
 }
 
-footer button {
-  padding: 6px 8px;
-  font-size: 14px;
+/* ================== MENU BUTTON ================== */
+.menu-btn {
+  font-size: 22px;
+  background: none;
+  border: none;
   cursor: pointer;
-}
-
-/* ================== DROPDOWNS ================== */
-.hidden {
-  display: none !important;
-}
-
-#profileInfo {
-  position: relative;
-}
-
-#profileDropdown,
-.upgrade-box {
-  background: #fff;
-  border: 1px solid #ddd;
-  padding: 10px;
-  position: absolute;
-  right: 0;
-  top: 45px;
-  width: 200px;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-  z-index: 9999;
 }
 
 /* ================== MOBILE ================== */
@@ -232,8 +186,7 @@ footer button {
     left: -260px;
     top: 0;
     height: 100vh;
-    z-index: 1000;
-    transition: left 0.3s ease;
+    z-index: 1500;
   }
 
   aside.open {
@@ -241,11 +194,10 @@ footer button {
   }
 
   #map-container {
-    display: none; /* ChatGPT behavior */
+    display: none;
   }
 
-  footer {
-    position: sticky;
-    bottom: 0;
+  header {
+    flex-wrap: wrap;
   }
 }
