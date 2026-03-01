@@ -351,25 +351,22 @@ app.post("/flutterwave/pay", auth, async (req, res) => {
     const fw = await axios.post(
   "https://api.flutterwave.com/v3/payments",
   {
-        tx_ref,
-        amount: 2000,
-        currency: "NGN",
-        redirect_url: `${process.env.BASE_URL}/payment-success?tx_ref=${tx_ref}`,
-        customer: { email: user.email },
-        customizations: {
-          title: "AI Robot Premium",
-          description: "Unlimited access"
-        }
-      },
-      { headers: { Authorization: `Bearer ${process.env.FLW_SECRET_KEY}` } }
-    );
+    tx_ref,
+    amount: 2000,
+    currency: "NGN",
+    redirect_url: `${process.env.BASE_URL}/payment-success?tx_ref=${tx_ref}`,
+    customer: { email: user.email },
+    customizations: {
+      title: "AI Robot Premium",
+      description: "Unlimited access"
+    }
+  },
+  { headers: { Authorization: `Bearer ${process.env.FLW_SECRET_KEY}` } }
+);
 
-    res.json({ link: fw.data.data.link });
-  } catch (err) {
-    console.error(err.response?.data || err);
-    res.status(500).json({ message: "Flutterwave initiation failed" });
-  }
-});
+console.log("Flutterwave response:", fw.data); // <--- ADD THIS
+
+res.json({ link: fw.data.data.link });
 
 app.get("/flutterwave/verify/ref/:tx_ref", auth, async (req, res) => {
   try {
