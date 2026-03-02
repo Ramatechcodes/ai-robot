@@ -117,19 +117,23 @@ if (exists) return res.json({ message: "Email already registered" });
       expires_at: new Date(Date.now() + 10 * 60 * 1000)
     });
 
-    await transporter.sendMail({
-      to: email,
-      subject: "AI Robot OTP Verification",
-      html: `<h2>Your OTP Code</h2><h1>${otp}</h1>`
-    });
+   try {
+  await transporter.sendMail({
+    to: email,
+    subject: "AI Robot OTP Verification",
+    html: `<h2>Your OTP Code</h2><h1>${otp}</h1>`
+  });
+} catch (mailErr) {
+  console.error("❌ Email failed:", mailErr);
 
-    res.json({ message: "OTP sent to email 📧" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Registration failed" });
-  }
-});
+  // rollback
+  await supabase.from("users").delete().eq("email", email);
+  await supabase.from("otp_codes").delete().eq("email", email);
 
+  return res.status(500).json({
+    message: "❌ Failed to send OTP email. Try again."
+  });
+}
 
 
 // ================== VERIFY OTP ==================
