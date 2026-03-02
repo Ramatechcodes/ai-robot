@@ -23,7 +23,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 };
-app.use(cors(corsOptions));
+
 
 app.use(cors(corsOptions)); // ✅ use configured CORS
 app.use(express.json());
