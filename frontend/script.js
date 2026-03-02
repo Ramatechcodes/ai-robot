@@ -35,6 +35,7 @@ const fileInput = document.getElementById("fileInput");
  const menuBtn = document.getElementById("menuBtn");
 const sidebar = document.querySelector("aside");
 const robotText = document.getElementById("robotText");
+const robotImg = document.getElementById("robot-img");
 menuBtn.addEventListener("click", () => {
   sidebar.classList.toggle("open");
 });
@@ -621,6 +622,11 @@ userInput.addEventListener("input", () => {
   userInput.style.height = "auto";
   userInput.style.height = userInput.scrollHeight + "px";
 });
+
+function speakLast() {
+    if (!lastAIReply) return;
+    speakText(lastAIReply);
+}
 /******************** FLUTTERWAVE ********************/
 async function startFlutterwaveUpgrade() {
   const token = localStorage.getItem(TOKEN_KEY);
