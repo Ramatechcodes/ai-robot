@@ -8,7 +8,6 @@ const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const multer = require("multer");
 const fs = require("fs");
-const nodemailer = require("nodemailer");
 const path = require("path");
 
 // ================== APP SETUP ==================
@@ -43,28 +42,33 @@ const supabase = createClient(
 
 // ================== EMAIL ==================
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false, // MUST be false for port 587
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
- connectionTimeout: 20000,
-greetingTimeout: 20000,
-socketTimeout: 20000
-});
-
-// Verify on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ SMTP ERROR:", error);
-  } else {
-    console.log("✅ SMTP ready (Brevo connected)");
-  }
-});
-
+async function sendOTPEmail(email, otp) {
+  await axios.post(
+    "https://api.brevo.com/v3/smtp/email",
+    {
+      sender: {
+        name: "Ramatechcode AI robot",
+        email: "ramatechcode14@gmail.com"
+      },
+      to: [{ email }],
+      subject: "AI Robot – OTP Verification",
+      htmlContent: `
+        <div style="font-family:Arial">
+          <h2>Email Verification</h2>
+          <p>Your OTP code is:</p>
+          <h1 style="letter-spacing:4px">${otp}</h1>
+          <p>This code expires in 10 minutes.</p>
+        </div>
+      `
+    },
+    {
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
 
 function isNewMonth(lastReset) {
   if (!lastReset) return true;
@@ -132,19 +136,7 @@ if (exists) return res.json({ message: "Email already registered" });
       expires_at: new Date(Date.now() + 10 * 60 * 1000)
     });
 
-  await transporter.sendMail({
-  from: process.env.SMTP_FROM,
-  to: email,
-  subject: "AI Robot – OTP Verification",
-  html: `
-    <div style="font-family:Arial">
-      <h2>Email Verification</h2>
-      <p>Your OTP code is:</p>
-      <h1 style="letter-spacing:4px">${otp}</h1>
-      <p>This code expires in 10 minutes.</p>
-    </div>
-  `
-});
+  await sendOTPEmail(email, otp);
     res.json({ message: "OTP sent to email 📧" });
   } catch (err) {
     console.error(err);
