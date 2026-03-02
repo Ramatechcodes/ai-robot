@@ -217,16 +217,27 @@ function saveChats() {
 
 /******************** AUTH ACTIONS ********************/
 async function register() {
-  if (!regEmail.value || !regPassword.value) return alert("Fill all fields");
+  if (!regEmail.value || !regPassword.value)
+    return alert("Fill all fields");
+
   const res = await fetch(`${API}/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: regEmail.value, password: regPassword.value })
+    body: JSON.stringify({
+      email: regEmail.value,
+      password: regPassword.value
+    })
   });
+
   const data = await res.json();
+
   alert(data.message);
-  tempEmail = regEmail.value;
-  showVerify();
+
+  // ✅ Only move forward if OTP was actually sent
+  if (data.message.includes("OTP sent")) {
+    tempEmail = regEmail.value;
+    showVerify();
+  }
 }
 
 async function verifyOTP() {
