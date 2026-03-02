@@ -456,18 +456,11 @@ async function uploadFile() {
 
   if (!res.ok) return alert("Upload failed");
   const data = await res.json();
+const imgDiv = document.createElement("div");
+imgDiv.innerHTML = `<img src="${data.url}" style="max-width:20%; margin-bottom:10px;"><br>${data.aiReply}`;
+messagesDiv.appendChild(imgDiv);
 
-  const imgDiv = document.createElement("div");
-  imgDiv.innerHTML = `<img src="${data.url}" style="max-width:20%; margin-bottom:10px;">`;
-  messagesDiv.appendChild(imgDiv);
-
-  addMessage("📎 File uploaded. Ask a question about it.", "assistant");
-
-  lastUploadedFile = {
-    type: file.type,
-    url: data.url
-  };
-}
+lastUploadedFile = { type: file.type, url: data.url };
 
 /******************** SPEECH RECOGNITION ********************/
 async function startSpeechRecognition(lang = "en-US") {
