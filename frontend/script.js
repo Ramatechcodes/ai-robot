@@ -461,6 +461,7 @@ imgDiv.innerHTML = `<img src="${data.url}" style="max-width:20%; margin-bottom:1
 messagesDiv.appendChild(imgDiv);
 
 lastUploadedFile = { type: file.type, url: data.url };
+}  // <-- close uploadFile here
 
 /******************** SPEECH RECOGNITION ********************/
 async function startSpeechRecognition(lang = "en-US") {
