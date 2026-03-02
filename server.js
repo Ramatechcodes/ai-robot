@@ -317,9 +317,9 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
     .eq("id", req.user.id)
     .single();
 
+  // Free plan check
   if (user.plan === "free") {
     const today = new Date().toISOString().split("T")[0];
-
     const { count } = await supabase
       .from("uploads")
       .select("*", { count: "exact" })
@@ -330,6 +330,7 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
       return res.status(403).json({ message: "Daily upload limit reached" });
   }
 
+  // Save file in DB
   await supabase.from("uploads").insert({
     user_id: req.user.id,
     filename: req.file.filename,
@@ -337,9 +338,42 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
     mimetype: req.file.mimetype
   });
 
+  const fileUrl = `${BASE_URL}/uploads/${req.file.filename}`;
+
+  // ✅ Use OpenAI to analyze image
+  let aiReply = "";
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/responses",
+      {
+        model: "gpt-4.1-mini",
+        input: [
+          {
+            role: "user",
+            content: [
+              { type: "input_text", text: "Describe the content of this image" },
+              { type: "input_image", image_url: fileUrl }
+            ]
+          }
+        ]
+      },
+      {
+        headers: {
+          "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    aiReply = response.data.output_text || "Cannot recognize the image.";
+  } catch (err) {
+    console.error(err.response?.data || err);
+    aiReply = "❌ Error analyzing image";
+  }
+
   res.json({
-    message: "Uploaded",
-    url: `${BASE_URL}/uploads/${req.file.filename}` // ✅ FIXED
+    message: "Uploaded and analyzed",
+    url: fileUrl,
+    aiReply
   });
 });
 
