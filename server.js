@@ -225,18 +225,23 @@ app.post("/chat", auth, async (req, res) => {
     let conversation = [
   {
     role: "system",
-   content: `
+  content: `
 You are an AI assistant in a web app.
 
-When user asks to draw or sketch:
-- Prefer SVG diagrams using <svg>
-- OR use [GENERATE_IMAGE: description]
-
+CRITICAL RULE:
+If the user asks for an image, picture, illustration, drawing, diagram, or sketch:
+- You MUST respond ONLY with:
+  [GENERATE_IMAGE: short clear description]
+- Do NOT explain.
+- Do NOT say you cannot display images.
+- Do NOT add any other text.
 For maps respond ONLY:
 LAT:xx.xxxx, LNG:yy.yyyy
 
-Do NOT use markdown headers (#).
 `
+
+
+
   },
   ...(lastChat ? JSON.parse(lastChat.messages) : [])
 ];
