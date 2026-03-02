@@ -147,22 +147,15 @@ function toggleUpgradeDropdown() {
   if (dropdown) dropdown.classList.toggle("hidden");
 }
 function safeRender(text) {
-  // Remove SVG if present (keep diagrams)
+  // SVG support
   if (text.includes("<svg")) return text;
 
-  // Remove markdown headers (#)
+  // Remove markdown headers ### ##
   text = text.replace(/^#{1,6}\s*/gm, "");
 
-  // Remove bold/italic stars
-  text = text.replace(/\*\*(.*?)\*\*/g, "$1");  // bold
-  text = text.replace(/\*(.*?)\*/g, "$1");      // italic
-  text = text.replace(/__([^_]+)__/g, "$1");    // bold alternative
-  text = text.replace(/_(.*?)_/g, "$1");        // italic alternative
-
-  // Remove code fences but keep content
+  // Code blocks
   text = text.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
 
-  // Replace newlines with <br>
   return text.replace(/\n/g, "<br>");
 }
 function showMap(lat, lng) {
