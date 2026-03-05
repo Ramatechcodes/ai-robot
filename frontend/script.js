@@ -673,6 +673,31 @@ if (tx_ref && !verified && localStorage.getItem(TOKEN_KEY)) {
     .catch(console.error);
 }
 
+/******************** PWA INSTALL ********************/
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const installBtn = document.createElement("button");
+  installBtn.id = "installAppBtn";
+  installBtn.innerText = "📲 Install App";
+
+  installBtn.style.position = "fixed";
+  installBtn.style.bottom = "20px";
+  installBtn.style.right = "20px";
+  installBtn.style.zIndex = "9999";
+
+  installBtn.onclick = async () => {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.remove();
+  };
+
+  document.body.appendChild(installBtn);
+});
 
 /******************** AUTO LOGIN ********************/
 
@@ -694,3 +719,6 @@ if (tx_ref && !verified && localStorage.getItem(TOKEN_KEY)) {
       showLoginPage();
     });
 })();
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}
