@@ -1,11 +1,25 @@
-self.addEventListener("install", () => {
-  self.skipWaiting();
+const CACHE_NAME = "ai-robot-cache-v1";
+
+const urlsToCache = [
+  "/",
+  "/index.html",
+  "/style.css",
+  "/script.js",
+  "/ai3.png"
+];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
+  );
 });
 
-self.addEventListener("activate", () => {
-  clients.claim();
-});
-
-self.addEventListener("fetch", () => {
-  // Network-first for now
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
 });
