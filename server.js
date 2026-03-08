@@ -403,7 +403,7 @@ app.post("/flutterwave/pay", auth, async (req, res) => {
   "https://api.flutterwave.com/v3/payments",
   {
         tx_ref,
-        amount: 2000,
+        amount: 2400,
         currency: "NGN",
         redirect_url: `${process.env.BASE_URL}/payment-success?tx_ref=${tx_ref}`,
         customer: { email: user.email },
@@ -559,4 +559,5 @@ app.get("*", (req, res) => {
 // ================== START SERVER ==================
 app.listen(PORT, () =>
   console.log(`🤖 Server running on ${BASE_URL}`)
+
 );
