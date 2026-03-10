@@ -1,11 +1,12 @@
-const CACHE_NAME = "ai-robot-cache-v2";
+const CACHE_NAME = "ai-robot-cache-v3";
 
 const urlsToCache = [
   "/",
   "/index.html",
   "/style.css",
   "/script.js",
-  "/ai3.png"
+  "/ai3.png",
+  "/pasta.jpg"
 ];
 
 self.addEventListener("install", event => {
@@ -18,20 +19,16 @@ self.addEventListener("install", event => {
 
 self.addEventListener("fetch", event => {
 
-  const request = event.request;
+  const requestURL = new URL(event.request.url);
 
-  // ❌ Do NOT cache API or POST requests
-  if (request.method !== "GET") return;
-
-  const url = new URL(request.url);
-
-  // Ignore chat API
-  if (url.pathname.startsWith("/chat")) return;
+  // Only handle same-origin requests
+  if (requestURL.origin !== location.origin) {
+    return;
+  }
 
   event.respondWith(
-    caches.match(request).then(response => {
-      return response || fetch(request);
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
     })
   );
-
 });
