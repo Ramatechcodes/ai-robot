@@ -115,6 +115,15 @@ header {
   border-radius: 50%;
   cursor: pointer;
 }
+#upgrade-container {
+  margin-left: 6px;
+}
+
+#upgradeBtn {
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+}
 
 /* Push right */
 header > *:nth-child(2) {
@@ -149,18 +158,21 @@ header > *:nth-child(2) {
 #messages {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  word-wrap: break-word;
 }
-
 /* ================== MESSAGE ================== */
 .message {
   max-width: 85%;
   padding: 14px;
   border-radius: 12px;
   line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .message.user {
@@ -184,9 +196,11 @@ footer {
 }
 
 #userInput {
-  flex: 1 1 100%;
+  flex: 1;
+  width: 100%;
   resize: none;
-  padding: 8px;
+  padding: 10px;
+  font-size: 14px;
 }
 
 /* ================== MENU BUTTON ================== */
@@ -199,11 +213,13 @@ footer {
 
 /* ================== MOBILE ================== */
 @media (max-width: 768px) {
+
   aside {
     position: fixed;
     left: -260px;
     top: 0;
     height: 100vh;
+    width: 260px;
     z-index: 1500;
   }
 
@@ -211,11 +227,63 @@ footer {
     left: 0;
   }
 
-  #map-container {
-    display: none;
+  main {
+    width: 100%;
   }
 
   header {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 6px;
   }
+
+  #robot-img {
+    width: 30px;
+  }
+
+  #profileIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  #upgradeBtn {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  #messages {
+    padding: 12px;
+  }
+
+  footer {
+    gap: 5px;
+  }
+
+  #userInput {
+    font-size: 14px;
+  }
+
+  #map-container {
+    height: 180px;
+  }
+}
+@media (max-width: 420px) {
+
+  header {
+    padding: 6px;
+  }
+
+  #robotStatus span {
+    font-size: 13px;
+  }
+
+  #upgradeBtn {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .message {
+    max-width: 92%;
+    font-size: 14px;
+  }
+
 }
