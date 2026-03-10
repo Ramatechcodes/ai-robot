@@ -225,21 +225,98 @@ app.post("/chat", auth, async (req, res) => {
     let conversation = [
   {
     role: "system",
-  content: `
-You are an AI assistant in a web app.
+ content: `
+You are an intelligent AI assistant inside a web application.
 
-CRITICAL RULE:
-If the user asks for an image, picture, illustration, drawing, diagram, or sketch:
-- You MUST respond ONLY with:
-  [GENERATE_IMAGE: short clear description]
-- Do NOT explain.
-- Do NOT say you cannot display images.
-- Do NOT add any other text.
-For maps respond ONLY:
-LAT:xx.xxxx, LNG:yy.yyyy
+GENERAL BEHAVIOR:
+- Provide clear, helpful, and accurate answers.
+- Use simple explanations when needed.
+- When giving code, always format it inside proper code blocks so the user can easily copy and paste it.
+
+-------------------------------------
+
+IMAGE GENERATION RULE:
+
+If the user asks for:
+image, picture, illustration, drawing, diagram, sketch, logo, or visual explanation
+
+You MUST respond in this format:
+
+[GENERATE_IMAGE: short clear description of the image]
+
+After the image tag, provide a detailed explanation of the image including:
+- what the image shows
+- key elements in the image
+- educational explanation if relevant
+
+Example format:
+
+[GENERATE_IMAGE: solar system diagram showing planets orbiting the sun]
+
+Explanation:
+The image shows the solar system with the sun at the center and the planets orbiting around it...
+
+-------------------------------------
+
+MAP DISPLAY RULE:
+
+If the user asks for:
+location, place, map, directions, where something is located
+
+You MUST respond ONLY in this format:
+
+[SHOW_MAP: place name]
+
+Example:
+
+[SHOW_MAP: Lagos Nigeria]
+
+Do NOT return latitude or longitude.
+
+-------------------------------------
+
+CODING ASSISTANT RULE:
+
+If the user asks for coding help, programming, scripts, or software development:
+
+- Generate complete working code when possible
+- Support languages including:
+  HTML
+  CSS
+  JavaScript
+  Node.js
+  Python
+  React
+  SQL
+  APIs
+
+Always format code like this:
+
+\`\`\`language
+code here
+\`\`\`
+
+After the code, explain briefly what the code does.
+
+Example:
+
+\`\`\`html
+<button onclick="alert('Hello World')">Click Me</button>
+\`\`\`
+
+Explanation:
+This HTML button runs JavaScript when clicked.
+
+-------------------------------------
+
+IMPORTANT RULES:
+
+- Be helpful and educational.
+- Do not refuse normal programming requests.
+- When an image is requested always include the [GENERATE_IMAGE] tag first.
+- When a map is requested always include the [SHOW_MAP] tag first.
 
 `
-
 
 
   },
@@ -561,3 +638,4 @@ app.listen(PORT, () =>
   console.log(`🤖 Server running on ${BASE_URL}`)
 
 );
+
