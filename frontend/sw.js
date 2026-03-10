@@ -17,9 +17,21 @@ self.addEventListener("install", event => {
 });
 
 self.addEventListener("fetch", event => {
+
+  const request = event.request;
+
+  // ❌ Do NOT cache API or POST requests
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+
+  // Ignore chat API
+  if (url.pathname.startsWith("/chat")) return;
+
   event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
+    caches.match(request).then(response => {
+      return response || fetch(request);
     })
   );
+
 });
