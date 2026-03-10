@@ -1,4 +1,4 @@
-const CACHE_NAME = "ai-robot-cache-v1";
+const CACHE_NAME = "ai-robot-cache-v2";
 
 const urlsToCache = [
   "/",
