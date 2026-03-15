@@ -353,6 +353,7 @@ if (currentPlan === "free" && questionsAsked >= 3) {
 function renderAIContent(text) {
   const div = document.createElement("div");
   div.className = "message assistant";
+ div.innerHTML = safeRender(text);
   addCopyButtons();
   messagesDiv.appendChild(div);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
