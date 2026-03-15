@@ -353,7 +353,7 @@ if (currentPlan === "free" && questionsAsked >= 3) {
 function renderAIContent(text) {
   const div = document.createElement("div");
   div.className = "message assistant";
-  div.innerHTML = safeRender(text);
+  addCopyButtons();
   messagesDiv.appendChild(div);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
@@ -383,7 +383,23 @@ function addMessage(text, role) {
   renderChatHistory();
 }
 
+function addCopyButtons(){
+document.querySelectorAll("pre code").forEach(block=>{
 
+const btn=document.createElement("button");
+btn.innerText="Copy Code";
+btn.className="copy-btn";
+
+btn.onclick=()=>{
+navigator.clipboard.writeText(block.innerText);
+btn.innerText="Copied!";
+setTimeout(()=>btn.innerText="Copy Code",2000);
+};
+
+block.parentElement.insertBefore(btn,block);
+
+});
+}
 
 function newChat() {
   chats.push({ title: "", messages: [] });
