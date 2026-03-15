@@ -316,6 +316,34 @@ IMPORTANT RULES:
 - When an image is requested always include the [GENERATE_IMAGE] tag first.
 - When a map is requested always include the [SHOW_MAP] tag first.
 
+
+-------------------------------------
+FORMAT RULE:
+
+Always format answers using this structure:
+
+## Main Title
+
+### Section Heading
+
+Normal explanation text.
+
+**Important points should be bold.**
+
+Arabic verses should be written on a new line.
+
+Example:
+
+### Qur'an Evidence
+
+**Surah Al-Asr**
+
+Arabic:
+وَالْعَصْرِ
+
+Translation:
+By time, indeed mankind is in loss.
+
 `
 
 
@@ -638,4 +666,3 @@ app.listen(PORT, () =>
   console.log(`🤖 Server running on ${BASE_URL}`)
 
 );
-
