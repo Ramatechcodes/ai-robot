@@ -159,8 +159,14 @@ function safeRender(text) {
   text = text.replace(/__([^_]+)__/g, "$1");    // bold alternative
   text = text.replace(/_(.*?)_/g, "$1");        // italic alternative
 
- // code blocks
-  text = text.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+ // Convert markdown code blocks properly
+text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
+
+lang = lang || "javascript";
+
+return `<pre><code class="language-${lang}">${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</code></pre>`;
+
+});
   // Replace newlines with <br>
   return text.replace(/\n/g, "<br>");
 }
