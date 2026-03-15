@@ -297,9 +297,7 @@ async function sendMessage() {
   return;
 }
 
-  const div = document.createElement("div");
-  div.className = "message assistant";
-  messagesDiv.appendChild(div);
+
 
   try {
     const res = await fetch(`${API}/chat`, {
