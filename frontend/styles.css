@@ -227,6 +227,26 @@ padding-left:10px;
 margin:10px 0;
 color:#555;
 }
+pre{
+background:#0f172a;
+color:#e2e8f0;
+padding:14px;
+border-radius:8px;
+overflow-x:auto;
+font-size:14px;
+}
+
+code{
+font-family:monospace;
+}
+
+.token.tag{ color:#f472b6 }
+.token.attr-name{ color:#38bdf8 }
+.token.attr-value{ color:#facc15 }
+.token.selector{ color:#22c55e }
+.token.property{ color:#f97316 }
+.token.keyword{ color:#8b5cf6 }
+.token.string{ color:#22c55e }
 
 /* Arabic styling */
 
