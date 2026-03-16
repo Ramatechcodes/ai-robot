@@ -296,9 +296,7 @@ async function sendMessage() {
   toggleUpgradeDropdown();
   return;
 }
- const div = document.createElement("div");
-  div.className = "message assistant";
-  messagesDiv.appendChild(div);
+
 
 
 
