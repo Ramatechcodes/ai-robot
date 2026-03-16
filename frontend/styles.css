@@ -1,347 +1,125 @@
-/* ================== RESET ================== */
-* {
-  box-sizing: border-box;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🤖 AI Robot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f172a">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AI Robot">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+<!-- Math -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #f4f6f8;
-}
+<!-- Code Highlight -->
+<link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
 
-/* ================== AUTH ================== */
-#auth-container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+<body>
 
-.card {
-  background: #fff;
-  padding: 25px;
-  width: 320px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.1);
-}
-.card input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 10px;
-}
+<div id="auth-container">
+  <div id="login-box" class="card">
+    <h2>Login</h2>
+    <input id="loginEmail" placeholder="Email">
+    <input id="loginPassword" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <p onclick="showRegister()">Register</p>
+  </div>
 
-.card button {
-  width: 100%;
-  padding: 12px;
-  background: #4caf50;
-  border: none;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-}
+  <div id="register-box" class="card hidden">
+    <h2>Register</h2>
+    <input id="regEmail" placeholder="Email">
+    <input id="regPassword" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+  </div>
 
-/* ================== CHAT ROOT ================== */
-#chat-container {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-}
+  <div id="verify-box" class="card hidden">
+    <h2>Verify OTP</h2>
+    <input id="otpInput" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify</button>
+  </div>
+</div>
 
-/* ================== SIDEBAR ================== */
-aside {
-  width: 260px;
-  background: #111827;
-  color: #fff;
-  padding: 10px;
-  overflow-y: auto;
-  flex-shrink: 0;
-  transition: left .3s ease;
-}
+<div id="robot-container">
+  
+<div id="chat-container" class="hidden">
+  <aside>
+    <button onclick="newChat()">➕ New Chat</button>
+    <div id="chatHistory"></div>
+  </aside>
+ 
 
-aside button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background: #2563eb;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
 
-/* ================== MAIN ================== */
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  background: #f9f9f9;
-}
+  <main>
+  <!-- FIXED HEADER -->
+  <header id="chat-header">
+    <div id="robotStatus">
+      <img id="robot-img" src="robot.jpg">
+      <span id="robotText">🤖 Idle</span>
+    </div>
 
-/* ================== HEADER ================== */
-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-  flex-wrap: nowrap;
-  width: 100%;
-}
+    <div id="profileInfo">
+      <img id="profileIcon" src="avatar.png" onclick="toggleProfileDropdown()">
+      <div id="profileDropdown" class="hidden">
+        <p id="profileEmail"></p>
+        <p id="profilePlan"></p>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div id="upgrade-container" style="position:relative; display:inline-block;">
+  <button onclick="toggleUpgradeDropdown()">Upgrade ⭐</button>
+ <div id="upgradeDropdown" class="hidden upgrade-box">
+  <h3>⭐ Upgrade to Premium</h3>
+  <ul>
+    <li>✅ Unlimited questions</li>
+    
+    <li>✅ Arabic & English voice</li>
+    <li>✅ Faster AI responses</li>
+    <li>✅ Priority access</li>
+  </ul>
+  <button onclick="startFlutterwaveUpgrade()">Pay Now</button>
+</div>
 
-#robotStatus {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: bold;
-}
+</div>
+<button id="menuBtn" class="menu-btn">☰</button>
+  </header>
 
-#robot-img {
-  width: 36px;
-}
+  <!-- MAP (fixed height, does not scroll page) -->
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
 
-/* Right side controls */
-#profileInfo,
-#upgrade-container {
-  position: relative;
-}
+  <!-- ✅ ONLY THIS SCROLLS -->
+  <div id="messages"></div>
 
-#profileIcon {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-#upgrade-container {
-  margin-left: 6px;
-}
+  <!-- FIXED INPUT -->
+  <footer id="chat-footer">
+    <textarea id="userInput" placeholder="Ask anything..."></textarea>
 
-#upgradeBtn {
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 6px;
-}
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="startSpeechRecognition('en-US')">🎤 EN</button>
+    <button onclick="startSpeechRecognition('ar-SA')">🎤 AR</button>
+    <button onclick="stopSpeechRecognition()">⏹</button>
 
-/* Push right */
-header > *:nth-child(2) {
-  margin-left: auto;
-}
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">📎</button>
+    <button onclick="speakLast()">🔊</button>
 
-/* ================== DROPDOWNS ================== */
-.hidden {
-  display: none !important;
-}
+    <canvas id="micWave" width="200" height="40"></canvas>
+    <button onclick="toggleSpeechMute()">🔇</button>
+  </footer>
+</main>
+</div>
 
-#profileDropdown,
-.upgrade-box {
-  position: absolute;
-  right: 0;
-  top: 42px;
-  background: #fff;
-  border-radius: 8px;
-  padding: 10px;
-  width: 200px;
-  box-shadow: 0 5px 15px rgba(0,0,0,.15);
-  z-index: 2000;
-}
-
-/* ================== MAP ================== */
-#map-container {
-  height: 200px;
-  flex-shrink: 0;
-}
-
-/* ================== MESSAGES ================== */
-#messages {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  word-wrap: break-word;
-}
-/* ================== MESSAGE ================== */
-.message {
-  max-width: 85%;
-  padding: 14px;
-  border-radius: 12px;
-  line-height: 1.6;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.message.user {
-  background: #e5e7eb;
-  align-self: flex-end;
-}
-
-.message.assistant {
-  background: #dbeafe;
-  align-self: flex-start;
-}
-/* ================= AI MESSAGE FORMATTING ================= */
-
-#messages h1{
-font-size:26px;
-font-weight:700;
-margin:10px 0;
-}
-
-#messages h2{
-font-size:22px;
-font-weight:700;
-margin:8px 0;
-}
-
-#messages h3{
-font-size:18px;
-font-weight:600;
-margin:6px 0;
-}
-
-#messages p{
-line-height:1.6;
-margin:6px 0;
-}
-
-#messages blockquote{
-border-left:4px solid #3b82f6;
-padding-left:10px;
-margin:10px 0;
-color:#555;
-}
-
-/* Arabic styling */
-
-.arabic{
-font-family:"Amiri", serif;
-font-size:22px;
-direction:rtl;
-text-align:right;
-display:block;
-color:#065f46;
-margin:10px 0;
-}
-
-/* ================== FOOTER ================== */
-footer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 6px;
-  border-top: 1px solid #ddd;
-  background: #fff;
-}
-
-#userInput{
-flex:1;
-resize:none;
-min-height:40px;
-max-height:140px;
-overflow-y:auto;
-padding:10px;
-border-radius:8px;
-}
-#chat-footer{
-display:flex;
-align-items:flex-end;
-gap:8px;
-padding:10px;
-background:#0f172a;
-position:sticky;
-bottom:0;
-}
-#chat-footer button{
-flex-shrink:0;
-height:40px;
-}
-
-/* ================== MENU BUTTON ================== */
-.menu-btn {
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-/* ================== MOBILE ================== */
-@media (max-width: 768px) {
-
-  aside {
-    position: fixed;
-    left: -260px;
-    top: 0;
-    height: 100vh;
-    width: 260px;
-    z-index: 1500;
-  }
-
-  aside.open {
-    left: 0;
-  }
-
-  main {
-    width: 100%;
-  }
-
-  header {
-    flex-wrap: nowrap;
-    gap: 6px;
-  }
-
-  #robot-img {
-    width: 30px;
-  }
-
-  #profileIcon {
-    width: 30px;
-    height: 30px;
-  }
-
-  #upgradeBtn {
-    font-size: 12px;
-    padding: 5px 8px;
-  }
-
-  #messages {
-    padding: 12px;
-  }
-
-  footer {
-    gap: 5px;
-  }
-
-  #userInput {
-    font-size: 14px;
-  }
-
-  #map-container {
-    height: 180px;
-  }
-}
-@media (max-width: 420px) {
-
-  header {
-    padding: 6px;
-  }
-
-  #robotStatus span {
-    font-size: 13px;
-  }
-
-  #upgradeBtn {
-    font-size: 11px;
-    padding: 4px 6px;
-  }
-
-  .message {
-    max-width: 92%;
-    font-size: 14px;
-  }
-
-}
+<script src="script.js" defer></script>
+</body>
+</html>
