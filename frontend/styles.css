@@ -176,6 +176,7 @@ font-size:12px;
 #map-container {
   height: 200px;
   flex-shrink: 0;
+  display:none;
 }
 #map{
 width:100%;
@@ -192,6 +193,8 @@ height:100%;
   flex-direction: column;
   gap: 14px;
   word-wrap: break-word;
+  width:100%;
+max-width:100%;
 }
 /* ================== MESSAGE ================== */
 .message {
@@ -327,6 +330,7 @@ height:40px;
     height: 100vh;
     width: 260px;
     z-index: 1500;
+    max-width:80vw;
   }
 
   aside.open {
@@ -363,6 +367,10 @@ height:40px;
   footer {
     gap: 5px;
   }
+  img{
+max-width:100%;
+height:auto;
+}
 
   #userInput {
     font-size: 14px;
