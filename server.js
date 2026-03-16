@@ -408,7 +408,7 @@ if (imgMatch) {
     {
       model: "gpt-image-1",
       prompt,
-      size: "1024x1024"
+     size: "768x768"
     },
     {
       headers: {
