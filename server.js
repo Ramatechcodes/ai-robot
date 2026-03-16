@@ -348,7 +348,7 @@ By time, indeed mankind is in loss.
 
 
   },
- ...(lastChat ? JSON.parse(lastChat.messages).slice(-10) : [])
+  ...(lastChat ? JSON.parse(lastChat.messages) : [])
 ];
 
     conversation.push({ role: "user", content: message });
@@ -362,8 +362,7 @@ By time, indeed mankind is in loss.
       {
         headers: {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-        },
-        timeout:60000
+        }
       }
     );
 
@@ -408,7 +407,7 @@ if (imgMatch) {
     {
       model: "gpt-image-1",
       prompt,
-     size: "768x768"
+      size: "1024x1024"
     },
     {
       headers: {
