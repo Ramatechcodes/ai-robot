@@ -348,7 +348,7 @@ By time, indeed mankind is in loss.
 
 
   },
-  ...(lastChat ? JSON.parse(lastChat.messages) : [])
+ ...(lastChat ? JSON.parse(lastChat.messages).slice(-10) : [])
 ];
 
     conversation.push({ role: "user", content: message });
