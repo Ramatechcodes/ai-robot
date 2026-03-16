@@ -746,6 +746,3 @@ window.addEventListener("beforeinstallprompt", e => {
       showLoginPage();
     });
 })();
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js");
-}
