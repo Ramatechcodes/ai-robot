@@ -297,8 +297,9 @@ async function sendMessage() {
   return;
 }
 
-
-
+  const div = document.createElement("div");
+  div.className = "message assistant";
+  messagesDiv.appendChild(div);
 
   try {
     const res = await fetch(`${API}/chat`, {
@@ -370,9 +371,7 @@ Prism.highlightAll();
   // ✅ MAP SUPPORT
   const match = text.match(/LAT:(-?\d+(\.\d+)?),\s*LNG:(-?\d+(\.\d+)?)/i);
   if (match) {
-    const mapContainer = document.getElementById("map-container");
-mapContainer.style.display = "block";
-showMap(parseFloat(match[1]), parseFloat(match[3]));
+    showMap(parseFloat(match[1]), parseFloat(match[3]));
   }
 }
 
@@ -462,7 +461,7 @@ async function loadChatHistory() {
     messages: JSON.parse(c.messages)
   }));
 
- currentChatIndex = chats.length ? chats.length - 1 : null;
+  currentChatIndex = chats.length ? 0 : null;
   saveChats();
   renderChatHistory();
   renderMessages();
