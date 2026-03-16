@@ -362,7 +362,8 @@ By time, indeed mankind is in loss.
       {
         headers: {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
-        }
+        },
+        timeout:60000
       }
     );
 
