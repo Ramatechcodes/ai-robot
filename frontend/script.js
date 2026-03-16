@@ -370,7 +370,9 @@ Prism.highlightAll();
   // ✅ MAP SUPPORT
   const match = text.match(/LAT:(-?\d+(\.\d+)?),\s*LNG:(-?\d+(\.\d+)?)/i);
   if (match) {
-    showMap(parseFloat(match[1]), parseFloat(match[3]));
+    const mapContainer = document.getElementById("map-container");
+mapContainer.style.display = "block";
+showMap(parseFloat(match[1]), parseFloat(match[3]));
   }
 }
 
