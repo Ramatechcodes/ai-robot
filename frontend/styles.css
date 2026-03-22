@@ -153,7 +153,30 @@ header > *:nth-child(2) {
   height: 200px;
   flex-shrink: 0;
 }
+.code-block {
+  position: relative;
+  margin: 10px 0;
+}
 
+.copy-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+}
+
+pre {
+  background: #0f172a;
+  padding: 15px;
+  border-radius: 10px;
+  overflow-x: auto;
+}
 /* ================== MESSAGES ================== */
 #messages {
   flex: 1;
