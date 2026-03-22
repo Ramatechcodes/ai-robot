@@ -153,6 +153,10 @@ header > *:nth-child(2) {
   height: 200px;
   flex-shrink: 0;
 }
+#map {
+  width: 100%;
+  height: 100%;
+}
 .code-block {
   position: relative;
   margin: 10px 0;
