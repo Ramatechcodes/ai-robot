@@ -154,26 +154,27 @@ function safeRender(text) {
   text = text.replace(/^#{1,6}\s*/gm, "");
 
   // Remove bold/italic stars
-  text = text.replace(/\*\*(.*?)\*\*/g, "$1");  // bold
-  text = text.replace(/\*(.*?)\*/g, "$1");      // italic
-  text = text.replace(/__([^_]+)__/g, "$1");    // bold alternative
-  text = text.replace(/_(.*?)_/g, "$1");        // italic alternative
+  text = text.replace(/\*\*(.*?)\*\*/g, "$1");  
+  text = text.replace(/\*(.*?)\*/g, "$1");      
+  text = text.replace(/__([^_]+)__/g, "$1");    
+  text = text.replace(/_(.*?)_/g, "$1");        
 
- // Convert markdown code blocks properly
-text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
+  // Convert markdown code blocks properly
+  text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code) {
+    lang = lang || "javascript";
 
-lang = lang || "javascript";
-
-return `
-<div class="code-block">
-  <button class="copy-btn">Copy Code</button>
-  <pre><code class="language-${lang}">
+    return `
+    <div class="code-block">
+      <button class="copy-btn">Copy Code</button>
+      <pre><code class="language-${lang}">
 ${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-  </code></pre>
-</div>
-`;
+      </code></pre>
+    </div>
+    `;
+  });
 
-});
+  return text; // ✅ VERY IMPORTANT
+}
 /******************** PROFILE INFO ********************/
 async function updateProfileInfo() {
   const token = localStorage.getItem(TOKEN_KEY);
