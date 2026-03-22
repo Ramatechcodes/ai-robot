@@ -172,15 +172,25 @@ return `<pre><code class="language-${lang}">${code.replace(/</g,"&lt;").replace(
 }
 function showMap(lat, lng) {
   const mapDiv = document.getElementById("map");
+
   if (!mapDiv._leaflet_map) {
     const map = L.map(mapDiv).setView([lat, lng], 13);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
-    mapDiv._leaflet_map = map; // store reference
+
+    mapDiv._leaflet_map = map;
+
+    // ✅ FIX: Force map to resize properly
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+
   } else {
     mapDiv._leaflet_map.setView([lat, lng], 13);
   }
+
   L.marker([lat, lng]).addTo(mapDiv._leaflet_map);
 }
 /******************** PROFILE INFO ********************/
