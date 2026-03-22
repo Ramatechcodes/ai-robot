@@ -314,8 +314,15 @@ Example:
 
 Explanation:
 This HTML button runs JavaScript when clicked.
+CODING RULE UPGRADE:
+
+- Detect language automatically
+- Always format code properly
+- Explain briefly after code
+- Keep explanation short and clean
 
 -------------------------------------
+
 
 IMPORTANT RULES:
 
@@ -326,6 +333,7 @@ IMPORTANT RULES:
 
 
 -------------------------------------
+
 FORMAT RULE:
 
 Always format answers using this structure:
