@@ -358,23 +358,28 @@ if (currentPlan === "free" && questionsAsked >= 3) {
 function renderAIContent(text) {
   const div = document.createElement("div");
   div.className = "message assistant";
- div.innerHTML = safeRender(text);
-  addCopyButtons();
- 
-  messagesDiv.appendChild(div);
- if(window.Prism){
-Prism.highlightAll();
-}
 
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  // Detect map tag
+  const mapMatch = text.match(/\[SHOW_MAP:(.*?)\]/);
 
-  // ✅ MAP SUPPORT
-  const match = text.match(/LAT:(-?\d+(\.\d+)?),\s*LNG:(-?\d+(\.\d+)?)/i);
-  if (match) {
-    showMap(parseFloat(match[1]), parseFloat(match[3]));
+  if (mapMatch) {
+    const place = mapMatch[1].trim();
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data[0]) {
+          showMap(parseFloat(data[0].lat), parseFloat(data[0].lon));
+        }
+      });
   }
-}
 
+  div.innerHTML = safeRender(text.replace(/\[SHOW_MAP:.*?\]/, ""));
+  addCopyButtons();
+
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
 
 /******************** MESSAGE RENDER ********************/
 function addMessage(text, role) {
@@ -395,21 +400,14 @@ function addMessage(text, role) {
 }
 
 function addCopyButtons(){
-document.querySelectorAll("pre code").forEach(block=>{
-
-const btn=document.createElement("button");
-btn.innerText="Copy Code";
-btn.className="copy-btn";
-
-btn.onclick=()=>{
-navigator.clipboard.writeText(block.innerText);
-btn.innerText="Copied!";
-setTimeout(()=>btn.innerText="Copy Code",2000);
-};
-
-block.parentElement.insertBefore(btn,block);
-
-});
+  document.querySelectorAll(".copy-btn").forEach(btn=>{
+    btn.onclick = () => {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code);
+      btn.innerText = "Copied!";
+      setTimeout(()=>btn.innerText="Copy Code",2000);
+    };
+  });
 }
 
 function newChat() {
