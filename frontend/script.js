@@ -154,26 +154,34 @@ function safeRender(text) {
   text = text.replace(/^#{1,6}\s*/gm, "");
 
   // Remove bold/italic stars
-  text = text.replace(/\*\*(.*?)\*\*/g, "$1");  
-  text = text.replace(/\*(.*?)\*/g, "$1");      
-  text = text.replace(/__([^_]+)__/g, "$1");    
-  text = text.replace(/_(.*?)_/g, "$1");        
+  text = text.replace(/\*\*(.*?)\*\*/g, "$1");  // bold
+  text = text.replace(/\*(.*?)\*/g, "$1");      // italic
+  text = text.replace(/__([^_]+)__/g, "$1");    // bold alternative
+  text = text.replace(/_(.*?)_/g, "$1");        // italic alternative
 
-  // Convert markdown code blocks properly
-  text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code) {
-    lang = lang || "javascript";
+ // Convert markdown code blocks properly
+text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
 
-    return `
-    <div class="code-block">
-      <button class="copy-btn">Copy Code</button>
-      <pre><code class="language-${lang}">
-${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-      </code></pre>
-    </div>
-    `;
-  });
+lang = lang || "javascript";
 
-  return text; // ✅ VERY IMPORTANT
+return `<pre><code class="language-${lang}">${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</code></pre>`;
+
+});
+  // Replace newlines with <br>
+  return text.replace(/\n/g, "<br>");
+}
+function showMap(lat, lng) {
+  const mapDiv = document.getElementById("map");
+  if (!mapDiv._leaflet_map) {
+    const map = L.map(mapDiv).setView([lat, lng], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    mapDiv._leaflet_map = map; // store reference
+  } else {
+    mapDiv._leaflet_map.setView([lat, lng], 13);
+  }
+  L.marker([lat, lng]).addTo(mapDiv._leaflet_map);
 }
 /******************** PROFILE INFO ********************/
 async function updateProfileInfo() {
@@ -350,30 +358,23 @@ if (currentPlan === "free" && questionsAsked >= 3) {
 function renderAIContent(text) {
   const div = document.createElement("div");
   div.className = "message assistant";
-
-  // Detect map tag
-  const mapMatch = text.match(/\[SHOW_MAP:(.*?)\]/);
-
-  if (mapMatch) {
-    const place = mapMatch[1].trim();
-
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data[0]) {
-          showMap(parseFloat(data[0].lat), parseFloat(data[0].lon));
-        }
-      });
-  }
-
- div.innerHTML = safeRender(text.replace(/\[SHOW_MAP:.*?\]/, ""));
-
-// ✅ ADD THIS LINE
-setTimeout(addCopyButtons, 0);
-
+ div.innerHTML = safeRender(text);
+  addCopyButtons();
+ 
   messagesDiv.appendChild(div);
-  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+ if(window.Prism){
+Prism.highlightAll();
 }
+
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  // ✅ MAP SUPPORT
+  const match = text.match(/LAT:(-?\d+(\.\d+)?),\s*LNG:(-?\d+(\.\d+)?)/i);
+  if (match) {
+    showMap(parseFloat(match[1]), parseFloat(match[3]));
+  }
+}
+
 
 /******************** MESSAGE RENDER ********************/
 function addMessage(text, role) {
@@ -394,15 +395,23 @@ function addMessage(text, role) {
 }
 
 function addCopyButtons(){
-  document.querySelectorAll(".copy-btn").forEach(btn=>{
-    btn.onclick = () => {
-      const code = btn.nextElementSibling.innerText;
-      navigator.clipboard.writeText(code);
-      btn.innerText = "Copied!";
-      setTimeout(()=>btn.innerText="Copy Code",2000);
-    };
-  });
+document.querySelectorAll("pre code").forEach(block=>{
+
+const btn=document.createElement("button");
+btn.innerText="Copy Code";
+btn.className="copy-btn";
+
+btn.onclick=()=>{
+navigator.clipboard.writeText(block.innerText);
+btn.innerText="Copied!";
+setTimeout(()=>btn.innerText="Copy Code",2000);
+};
+
+block.parentElement.insertBefore(btn,block);
+
+});
 }
+
 function newChat() {
   chats.push({ title: "", messages: [] });
   currentChatIndex = chats.length - 1;
