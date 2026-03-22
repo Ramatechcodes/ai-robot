@@ -164,35 +164,16 @@ text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
 
 lang = lang || "javascript";
 
-return `<pre><code class="language-${lang}">${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</code></pre>`;
+return `
+<div class="code-block">
+  <button class="copy-btn">Copy Code</button>
+  <pre><code class="language-${lang}">
+${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  </code></pre>
+</div>
+`;
 
 });
-  // Replace newlines with <br>
-  return text.replace(/\n/g, "<br>");
-}
-function showMap(lat, lng) {
-  const mapDiv = document.getElementById("map");
-
-  if (!mapDiv._leaflet_map) {
-    const map = L.map(mapDiv).setView([lat, lng], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    mapDiv._leaflet_map = map;
-
-    // ✅ FIX: Force map to resize properly
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 200);
-
-  } else {
-    mapDiv._leaflet_map.setView([lat, lng], 13);
-  }
-
-  L.marker([lat, lng]).addTo(mapDiv._leaflet_map);
-}
 /******************** PROFILE INFO ********************/
 async function updateProfileInfo() {
   const token = localStorage.getItem(TOKEN_KEY);
@@ -384,8 +365,10 @@ function renderAIContent(text) {
       });
   }
 
-  div.innerHTML = safeRender(text.replace(/\[SHOW_MAP:.*?\]/, ""));
-  addCopyButtons();
+ div.innerHTML = safeRender(text.replace(/\[SHOW_MAP:.*?\]/, ""));
+
+// ✅ ADD THIS LINE
+setTimeout(addCopyButtons, 0);
 
   messagesDiv.appendChild(div);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -419,7 +402,6 @@ function addCopyButtons(){
     };
   });
 }
-
 function newChat() {
   chats.push({ title: "", messages: [] });
   currentChatIndex = chats.length - 1;
