@@ -283,6 +283,11 @@ bottom:0;
 flex-shrink:0;
 height:40px;
 }
+.ai-image {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+}
 
 /* ================== MENU BUTTON ================== */
 .menu-btn {
