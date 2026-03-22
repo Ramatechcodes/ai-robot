@@ -153,39 +153,7 @@ header > *:nth-child(2) {
   height: 200px;
   flex-shrink: 0;
 }
-#map {
-  width: 100%;
-  height: 100%;
-}
-.code-block {
-  position: relative;
-  margin: 10px 0;
-  max-width: 100%;
-  overflow-x: auto;
-}
 
-.copy-btn {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #111;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 12px;
-  border-radius: 5px;
-}
-
-pre {
-  background: #0f172a;
-  padding: 15px;
-  border-radius: 10px;
-  overflow-x: auto;
-  max-width: 100%;
-  white-space: pre-wrap;     /* ✅ wrap long lines */
-  word-break: break-word;    /* ✅ prevent overflow */
-}
 /* ================== MESSAGES ================== */
 #messages {
   flex: 1;
@@ -205,7 +173,6 @@ pre {
   line-height: 1.6;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  overflow-x: hidden;
 }
 
 .message.user {
@@ -292,11 +259,6 @@ bottom:0;
 #chat-footer button{
 flex-shrink:0;
 height:40px;
-}
-.ai-image {
-  max-width: 100%;
-  border-radius: 10px;
-  margin-top: 10px;
 }
 
 /* ================== MENU BUTTON ================== */
