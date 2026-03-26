@@ -76,8 +76,8 @@ main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  background: #f9f9f9;
+  min-height: 0; /* 🔥 CRITICAL FIX */
+  overflow: hidden;
 }
 
 /* ================== HEADER ================== */
@@ -90,6 +90,11 @@ header {
   border-bottom: 1px solid #ddd;
   flex-wrap: nowrap;
   width: 100%;
+}
+#chat-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 #robotStatus {
@@ -163,7 +168,9 @@ header > *:nth-child(2) {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  word-wrap: break-word;
+
+  /* 🔥 IMPORTANT FIX */
+  max-height: calc(100vh - 260px); 
 }
 /* ================== MESSAGE ================== */
 .message {
@@ -282,8 +289,9 @@ align-items:flex-end;
 gap:8px;
 padding:10px;
 background:#0f172a;
-position:sticky;
-bottom:0;
+position: sticky;
+  bottom: 0;
+  z-index: 1000;
 }
 #chat-footer button{
 flex-shrink:0;
