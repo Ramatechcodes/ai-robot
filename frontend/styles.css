@@ -155,8 +155,12 @@ header > *:nth-child(2) {
 
 /* ================== MAP ================== */
 #map-container {
-  height: 200px;
-  flex-shrink: 0;
+  height: 250px;
+  width: 100%;
+}
+#map {
+  height: 100%;
+  width: 100%;
 }
 
 /* ================== MESSAGES ================== */
