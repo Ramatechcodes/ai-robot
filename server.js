@@ -402,7 +402,7 @@ if (imgMatch) {
       .eq("id", user.id);
 
     res.json({
-  reply: reply.replace(/\[GENERATE_IMAGE:.*?\]/, "").trim(),
+ reply: reply.trim(), // keep map tag
   image: imageBase64
 });
 
