@@ -163,25 +163,29 @@ header > *:nth-child(2) {
 #messages {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   padding: 16px;
+
   display: flex;
   flex-direction: column;
   gap: 14px;
 
-  /* 🔥 IMPORTANT FIX */
-  max-height: calc(100vh - 260px); 
+  height: 100%;
+  max-height: none; /* 🔥 REMOVE LIMIT */
 }
 /* ================== MESSAGE ================== */
 .message {
-  max-width: 85%;
-  padding: 14px;
+  width: 100%;              /* FULL WIDTH */
+  max-width: 100%;          /* REMOVE LIMIT */
+  padding: 16px;
   border-radius: 12px;
-  line-height: 1.6;
-  word-wrap: break-word;
+  line-height: 1.7;
+  
+  word-break: break-word;
   overflow-wrap: break-word;
-   max-height: 400px;
-  overflow-y: auto;
+
+  /* ❌ REMOVE THESE */
+  /* max-height: 400px; */
+  /* overflow-y: auto; */
 }
 
 .message.user {
@@ -191,7 +195,7 @@ header > *:nth-child(2) {
 
 .message.assistant {
   background: #dbeafe;
-  align-self: flex-start;
+  align-self: stretch; /* 🔥 FULL WIDTH */
 }
 /* ================= AI MESSAGE FORMATTING ================= */
 
