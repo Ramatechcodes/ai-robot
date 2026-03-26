@@ -203,10 +203,39 @@ font-size:18px;
 font-weight:600;
 margin:6px 0;
 }
+.ai-image {
+  max-width: 250px;
+  border-radius: 10px;
+}
 
 #messages p{
 line-height:1.6;
 margin:6px 0;
+}
+.code-block {
+  position: relative;
+  margin-top: 10px;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 5px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+pre {
+  background: #0f172a;
+  color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  overflow-x: auto;
 }
 
 #messages blockquote{
