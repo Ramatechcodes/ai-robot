@@ -150,10 +150,16 @@ function toggleUpgradeDropdown() {
 function safeRender(text) {
   if (!text) return "";
 
-  // Remove markdown headings
+  // Remove headings (#)
   text = text.replace(/^#{1,6}\s*/gm, "");
 
-  // Convert code blocks FIRST
+  // Handle image tag
+  text = text.replace(/\[GENERATE_IMAGE:(.*?)\]/g, "");
+
+  // Handle MAP tag (hide raw text)
+  text = text.replace(/\[SHOW_MAP:(.*?)\]/g, "");
+
+  // Code blocks
   text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
     lang = lang || "javascript";
 
@@ -167,9 +173,12 @@ ${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
     `;
   });
 
+  // Bold formatting
+  text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+  // Line breaks
   return text.replace(/\n/g, "<br>");
 }
-
 function showMap(lat, lng) {
   const mapDiv = document.getElementById("map");
   if (!mapDiv._leaflet_map) {
@@ -365,12 +374,15 @@ function renderAIContent(text) {
   const div = document.createElement("div");
   div.className = "message assistant";
 
-  div.innerHTML = safeRender(text);
-  messagesDiv.appendChild(div);
-
-  // ✅ NEW MAP HANDLER
+  // 🔍 Extract map BEFORE rendering
   const mapMatch = text.match(/\[SHOW_MAP:(.*?)\]/);
 
+  let cleanText = text.replace(/\[SHOW_MAP:(.*?)\]/g, "");
+
+  div.innerHTML = safeRender(cleanText);
+  messagesDiv.appendChild(div);
+
+  // ✅ Trigger map
   if (mapMatch) {
     const place = mapMatch[1].trim();
     fetchLocation(place);
