@@ -389,12 +389,13 @@ function renderAIContent(text) {
 
   div.innerHTML = safeRender(cleanText);
   messagesDiv.appendChild(div);
+  addCopyButtons();
 
   // ✅ Trigger map
   if (mapMatch) {
     const place = mapMatch[1].trim();
     fetchLocation(place);
-  addCopyButtons();
+ 
   }
 
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
