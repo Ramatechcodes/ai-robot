@@ -181,16 +181,24 @@ ${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 }
 function showMap(lat, lng) {
   const mapDiv = document.getElementById("map");
-  if (!mapDiv._leaflet_map) {
-    const map = L.map(mapDiv).setView([lat, lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    mapDiv._leaflet_map = map; // store reference
-  } else {
-    mapDiv._leaflet_map.setView([lat, lng], 13);
-  }
-  L.marker([lat, lng]).addTo(mapDiv._leaflet_map);
+
+  // Clear old map completely (IMPORTANT)
+  mapDiv.innerHTML = "";
+
+  const map = L.map(mapDiv).setView([lat, lng], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  L.marker([lat, lng]).addTo(map)
+    .bindPopup("Location")
+    .openPopup();
+
+  // 🔥 Fix rendering issue
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 200);
 }
 /******************** PROFILE INFO ********************/
 async function updateProfileInfo() {
@@ -389,6 +397,7 @@ function renderAIContent(text) {
   }
 
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+ console.log("AI TEXT:", text);
 }
 async function fetchLocation(place) {
   const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`);
