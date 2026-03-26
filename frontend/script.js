@@ -19,6 +19,7 @@ let finalTranscript = "";
 let recognition;
 let currentUtterance = null;
 let isMuted = false;
+let isInterviewMode = false;
 /******************** DOM ********************/
 const authBox = document.getElementById("auth-container");
 const chatBox = document.getElementById("chat-container");
@@ -147,28 +148,27 @@ function toggleUpgradeDropdown() {
   if (dropdown) dropdown.classList.toggle("hidden");
 }
 function safeRender(text) {
-  // Remove SVG if present (keep diagrams)
-  if (text.includes("<svg")) return text;
+  if (!text) return "";
 
-  // Remove markdown headers (#)
+  // Remove markdown headings
   text = text.replace(/^#{1,6}\s*/gm, "");
 
-  // Remove bold/italic stars
-  text = text.replace(/\*\*(.*?)\*\*/g, "$1");  // bold
-  text = text.replace(/\*(.*?)\*/g, "$1");      // italic
-  text = text.replace(/__([^_]+)__/g, "$1");    // bold alternative
-  text = text.replace(/_(.*?)_/g, "$1");        // italic alternative
+  // Convert code blocks FIRST
+  text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
+    lang = lang || "javascript";
 
- // Convert markdown code blocks properly
-text = text.replace(/```(\w+)?([\s\S]*?)```/g, function(match, lang, code){
+    return `
+      <div class="code-block">
+        <button class="copy-btn">Copy</button>
+        <pre><code class="language-${lang}">
+${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+        </code></pre>
+      </div>
+    `;
+  });
 
-lang = lang || "javascript";
-
-return `<pre><code class="language-${lang}">${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</code></pre>`;
-
-});
-  // Replace newlines with <br>
   return text.replace(/\n/g, "<br>");
+}
 }
 function showMap(lat, lng) {
   const mapDiv = document.getElementById("map");
@@ -305,8 +305,10 @@ async function sendMessage() {
     const res = await fetch(`${API}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}` },
-      body: JSON.stringify({
-  message: text,
+     body: JSON.stringify({
+  message: isInterviewMode
+    ? `You are an interviewer. Ask me questions interactively like a real interview. Start now.\nUser: ${text}`
+    : text,
   file: lastUploadedFile || null,
   lang: /[\u0600-\u06FF]/.test(text) ? "ar" : "en"
 })
@@ -317,6 +319,10 @@ if (data.image) {
   const img = document.createElement("img");
   img.src = `data:image/png;base64,${data.image}`;
   img.className = "ai-image";
+ img.style.maxWidth = "250px";
+img.style.borderRadius = "10px";
+img.style.display = "block";
+img.style.marginTop = "10px";
   messagesDiv.appendChild(img);
 }
 
@@ -358,23 +364,30 @@ if (currentPlan === "free" && questionsAsked >= 3) {
 function renderAIContent(text) {
   const div = document.createElement("div");
   div.className = "message assistant";
- div.innerHTML = safeRender(text);
-  addCopyButtons();
- 
+
+  div.innerHTML = safeRender(text);
   messagesDiv.appendChild(div);
- if(window.Prism){
-Prism.highlightAll();
-}
+
+  // ✅ NEW MAP HANDLER
+  const mapMatch = text.match(/\[SHOW_MAP:(.*?)\]/);
+
+  if (mapMatch) {
+    const place = mapMatch[1].trim();
+    fetchLocation(place);
+  }
 
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+async function fetchLocation(place) {
+  const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${place}`);
+  const data = await res.json();
 
-  // ✅ MAP SUPPORT
-  const match = text.match(/LAT:(-?\d+(\.\d+)?),\s*LNG:(-?\d+(\.\d+)?)/i);
-  if (match) {
-    showMap(parseFloat(match[1]), parseFloat(match[3]));
+  if (data && data.length > 0) {
+    const lat = parseFloat(data[0].lat);
+    const lng = parseFloat(data[0].lon);
+    showMap(lat, lng);
   }
 }
-
 
 /******************** MESSAGE RENDER ********************/
 function addMessage(text, role) {
@@ -394,22 +407,15 @@ function addMessage(text, role) {
   renderChatHistory();
 }
 
-function addCopyButtons(){
-document.querySelectorAll("pre code").forEach(block=>{
-
-const btn=document.createElement("button");
-btn.innerText="Copy Code";
-btn.className="copy-btn";
-
-btn.onclick=()=>{
-navigator.clipboard.writeText(block.innerText);
-btn.innerText="Copied!";
-setTimeout(()=>btn.innerText="Copy Code",2000);
-};
-
-block.parentElement.insertBefore(btn,block);
-
-});
+function addCopyButtons() {
+  document.querySelectorAll(".copy-btn").forEach(btn => {
+    btn.onclick = () => {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code);
+      btn.innerText = "Copied!";
+      setTimeout(() => btn.innerText = "Copy", 2000);
+    };
+  });
 }
 
 function newChat() {
@@ -422,13 +428,33 @@ function newChat() {
 
 function renderChatHistory() {
   historyDiv.innerHTML = "";
+
   chats.forEach((chat, i) => {
     const div = document.createElement("div");
     div.className = "chat-item";
-    div.innerText = chat.title || `Chat ${i + 1}`;
-    div.onclick = () => { currentChatIndex = i; renderMessages(); };
+
+    div.innerHTML = `
+      <span onclick="selectChat(${i})">${chat.title || "Chat"}</span>
+      <button onclick="deleteChat(${i})">🗑</button>
+    `;
+
     historyDiv.appendChild(div);
   });
+}
+function selectChat(i) {
+  currentChatIndex = i;
+  renderMessages();
+}
+
+function deleteChat(i) {
+  if (!confirm("Delete this chat?")) return;
+
+  chats.splice(i, 1);
+  currentChatIndex = chats.length ? chats.length - 1 : null;
+
+  saveChats();
+  renderChatHistory();
+  renderMessages();
 }
 
 function renderMessages() {
@@ -465,6 +491,10 @@ async function loadChatHistory() {
   saveChats();
   renderChatHistory();
   renderMessages();
+}
+function toggleInterview() {
+  isInterviewMode = !isInterviewMode;
+  alert(isInterviewMode ? "Interview Mode ON" : "Interview Mode OFF");
 }
 
 
