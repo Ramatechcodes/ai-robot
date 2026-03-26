@@ -169,7 +169,7 @@ ${code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 
   return text.replace(/\n/g, "<br>");
 }
-}
+
 function showMap(lat, lng) {
   const mapDiv = document.getElementById("map");
   if (!mapDiv._leaflet_map) {
