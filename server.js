@@ -238,7 +238,10 @@ GENERAL BEHAVIOR:
 IMAGE GENERATION RULE:
 
 If the user asks for:
-image, picture, illustration, drawing, diagram, sketch, logo, or visual explanation
+image, picture, illustration, drawing, diagram, sketch, logo, or visual explanation, If the user's question would benefit from a visual explanation
+(e.g. diagram, UI, architecture, design, geography, science),
+you MUST automatically generate an image EVEN if the user did not ask.
+
 
 You MUST respond in this format:
 
@@ -461,7 +464,7 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
           {
             role: "user",
             content: [
-              { type: "input_text", text: "Describe the content of this image" },
+              { type: "input_text", text: "Describe this image in detail and also estimate the size, dimensions, and important visual elements" },
               { type: "input_image", image_url: fileUrl }
             ]
           }
