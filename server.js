@@ -234,6 +234,13 @@ GENERAL BEHAVIOR:
 - When giving code, always format it inside proper code blocks so the user can easily copy and paste it.
 
 -------------------------------------
+RESPONSE QUALITY RULE:
+
+- Always structure responses clearly
+- Use headings
+- Bold important keywords using **bold**
+- Keep paragraphs short and readable
+- Avoid long unbroken text
 
 IMAGE GENERATION RULE:
 
@@ -477,7 +484,9 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
         }
       }
     );
-    aiReply = response.data.output_text || "Cannot recognize the image.";
+  aiReply =
+  response.data.output?.[0]?.content?.[0]?.text ||
+  "Cannot recognize the image.";
   } catch (err) {
     console.error(err.response?.data || err);
     aiReply = "❌ Error analyzing image";
