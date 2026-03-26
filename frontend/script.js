@@ -394,6 +394,7 @@ function renderAIContent(text) {
   if (mapMatch) {
     const place = mapMatch[1].trim();
     fetchLocation(place);
+  addCopyButtons();
   }
 
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -425,13 +426,14 @@ function addMessage(text, role) {
 
   messagesDiv.appendChild(div);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+ if (!chat.messages) chat.messages = [];
   renderChatHistory();
 }
 
 function addCopyButtons() {
   document.querySelectorAll(".copy-btn").forEach(btn => {
     btn.onclick = () => {
-      const code = btn.nextElementSibling.innerText;
+      const code = btn.parentElement.querySelector("code").innerText;
       navigator.clipboard.writeText(code);
       btn.innerText = "Copied!";
       setTimeout(() => btn.innerText = "Copy", 2000);
@@ -440,7 +442,7 @@ function addCopyButtons() {
 }
 
 function newChat() {
-  chats.push({ title: "", messages: [] });
+  chats.push({ title: "", messages: [] }); // ensure messages exists
   currentChatIndex = chats.length - 1;
   saveChats();
   renderChatHistory();
