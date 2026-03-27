@@ -244,8 +244,10 @@ function saveChats() {
   } catch (e) {
     console.warn("Storage full — trimming chat history");
 
-    // Keep only last 5 chats
     chats = chats.slice(-5);
+
+    // ✅ FIX: reset index safely
+    currentChatIndex = chats.length ? chats.length - 1 : null;
 
     localStorage.setItem(USER_KEY(), JSON.stringify(chats));
   }
@@ -424,7 +426,16 @@ async function fetchLocation(place) {
 /******************** MESSAGE RENDER ********************/
 function addMessage(text, role) {
   if (currentChatIndex === null) newChat();
-  const chat = chats[currentChatIndex];
+ if (currentChatIndex === null || !chats[currentChatIndex]) {
+  newChat();
+}
+
+const chat = chats[currentChatIndex];
+
+// ✅ ensure messages exists BEFORE push
+if (!chat.messages) chat.messages = [];
+
+chat.messages.push({ role, content: text });
 
   if (!chat.title && role === "user") chat.title = text.slice(0, 30);
   chat.messages.push({ role, content: text });
@@ -489,10 +500,11 @@ function deleteChat(i) {
   renderChatHistory();
   renderMessages();
 }
-
 function renderMessages() {
   messagesDiv.innerHTML = "";
-  if (currentChatIndex === null) return;
+
+  // ✅ FIX: check if chat exists
+  if (currentChatIndex === null || !chats[currentChatIndex]) return;
 
   chats[currentChatIndex].messages.forEach(m => {
     const div = document.createElement("div");
@@ -515,11 +527,21 @@ async function loadChatHistory() {
 
   const data = await res.json();
 
-  chats = data.map(c => ({
-    title: c.title,
-    messages: JSON.parse(c.messages)
-  }));
+ chats = data.map(c => {
+  let msgs = [];
 
+  try {
+    msgs = JSON.parse(c.messages);
+    if (!Array.isArray(msgs)) msgs = [];
+  } catch {
+    msgs = [];
+  }
+
+  return {
+    title: c.title || "Chat",
+    messages: msgs
+  };
+});
   currentChatIndex = chats.length ? chats.length - 1 : null;
   saveChats();
   renderChatHistory();
