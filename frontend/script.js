@@ -85,7 +85,13 @@ async function login() {
 
     const data = await res.json();
 
-    if (!data.token) return alert("❌ Wrong email or password");
+    if (!res.ok) {
+  return alert(data.message || "❌ Login failed");
+}
+
+if (!data.token) {
+  return alert("❌ No token received");
+}
 
     // Save token
     localStorage.setItem(TOKEN_KEY, data.token);
