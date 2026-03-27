@@ -397,7 +397,7 @@ if (imgMatch) {
 }
 
     // ✅ SAVE MEMORY
-    conversation.push({ role: "assistant", content: reply });
+   conversation.push({ role: "assistant", content: reply.trim() });
 
     // Check if user already has a chat
 const { data: existingChat } = await supabase
