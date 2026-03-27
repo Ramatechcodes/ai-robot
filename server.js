@@ -395,27 +395,24 @@ const { data: existingChat } = await supabase
   .from("chats")
   .select("*")
   .eq("user_id", user.id)
-  .order("created_at", { ascending: false })
-  .limit(1)
+  .eq("title", title)
   .maybeSingle();
 
 if (existingChat) {
-  // ✅ UPDATE existing chat
   await supabase
     .from("chats")
     .update({
-      messages: JSON.stringify(conversation),
-      title: existingChat.title || title
+      messages: JSON.stringify(conversation)
     })
     .eq("id", existingChat.id);
 } else {
-  // ✅ CREATE new chat
   await supabase.from("chats").insert({
     user_id: user.id,
-    title: message.slice(0, 40),
+    title: title,
     messages: JSON.stringify(conversation)
   });
 }
+
     await supabase
       .from("users")
       .update({ questions_used: user.questions_used + 1 })
