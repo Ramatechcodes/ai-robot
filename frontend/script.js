@@ -4,7 +4,7 @@ const TOKEN_KEY = "token";
 const USER_KEY = () => `chats_current_user`;
 
 /******************** STATE ********************/
-let chats = JSON.parse(localStorage.getItem(USER_KEY())) || [];
+let chats = [];
 let currentChatIndex = chats.length ? chats.length - 1 : null;
 let lastUploadedFile = null;
 let currentPlan = "free";
@@ -432,14 +432,14 @@ function addMessage(text, role) {
 
 const chat = chats[currentChatIndex];
 
-// ✅ ensure messages exists BEFORE push
 if (!chat.messages) chat.messages = [];
 
-chat.messages.push({ role, content: text });
+chat.messages.push({
+  role: "assistant",
+  content: cleanReply
+});
 
-  if (!chat.title && role === "user") chat.title = text.slice(0, 30);
-  chat.messages.push({ role, content: text });
-  saveChats();
+saveChats();
 
   const div = document.createElement("div");
   div.className = `message ${role}`;
@@ -531,7 +531,7 @@ async function loadChatHistory() {
   let msgs = [];
 
   try {
-    msgs = JSON.parse(c.messages);
+   msgs = JSON.parse(c.messages).filter(m => m.role !== "system");
     if (!Array.isArray(msgs)) msgs = [];
   } catch {
     msgs = [];
@@ -546,6 +546,7 @@ async function loadChatHistory() {
   saveChats();
   renderChatHistory();
   renderMessages();
+ console.log("Loaded chats from backend:", data);
 }
 function toggleInterview() {
   isInterviewMode = !isInterviewMode;
