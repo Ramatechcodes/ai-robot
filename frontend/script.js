@@ -359,6 +359,14 @@ img.style.marginTop = "10px";
 const cleanReply = (data.reply || data.message || "provided on request")
   .replace(/#+/g, "")          // remove unwanted hash marks
   .trim();
+   // ✅ Save assistant message properly
+if (currentChatIndex !== null && chats[currentChatIndex]) {
+  chats[currentChatIndex].messages.push({
+    role: "assistant",
+    content: cleanReply
+  });
+  saveChats();
+}
 
 // Example: if AI gives image URLs, you can parse and render them
 
@@ -425,29 +433,29 @@ async function fetchLocation(place) {
 
 /******************** MESSAGE RENDER ********************/
 function addMessage(text, role) {
-  if (currentChatIndex === null) newChat();
- if (currentChatIndex === null || !chats[currentChatIndex]) {
-  newChat();
-}
+  if (currentChatIndex === null || !chats[currentChatIndex]) {
+    newChat();
+  }
 
-const chat = chats[currentChatIndex];
+  const chat = chats[currentChatIndex];
 
-if (!chat.messages) chat.messages = [];
+  if (!chat.messages) chat.messages = [];
 
-chat.messages.push({
-  role: "assistant",
-  content: cleanReply
-});
+  // ✅ FIX: Save correct role and content
+  chat.messages.push({
+    role: role,
+    content: text
+  });
 
-saveChats();
+  saveChats();
 
   const div = document.createElement("div");
   div.className = `message ${role}`;
-  div.innerHTML = safeRender(text); // <-- change from innerText to innerHTML
+  div.innerHTML = safeRender(text);
 
   messagesDiv.appendChild(div);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
- if (!chat.messages) chat.messages = [];
+
   renderChatHistory();
 }
 
