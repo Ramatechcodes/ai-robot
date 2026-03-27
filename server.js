@@ -217,7 +217,7 @@ app.post("/chat", auth, async (req, res) => {
       .from("users")
       .select("*")
       .eq("id", req.user.id)
-      .single();
+      .maybeSingle();
 
     if (user.plan === "free" && user.questions_used >= FREE_LIMIT) {
       return res.json({ reply: "❌ Free limit reached. Upgrade to continue." });
@@ -461,7 +461,7 @@ app.post("/vision", auth, upload.single("image"), async (req, res) => {
     .from("users")
     .select("plan")
     .eq("id", req.user.id)
-    .single();
+    .maybeSingle();
 
   // Free plan check
   if (user.plan === "free") {
@@ -540,7 +540,7 @@ app.post("/flutterwave/pay", auth, async (req, res) => {
       .from("users")
       .select("email")
       .eq("id", req.user.id)
-      .single();
+      .maybeSingle();
 
  const fw = await axios.post(
   "https://api.flutterwave.com/v3/payments",
@@ -590,7 +590,7 @@ app.get("/flutterwave/verify/ref/:tx_ref", auth, async (req, res) => {
       .from("payments")
       .select("user_id")
       .eq("tx_ref", tx_ref)
-      .single();
+      .maybeSingle();
 
     if (!payment) {
       return res.status(404).json({ message: "Payment record not found" });
@@ -647,7 +647,7 @@ app.get("/me", auth, async (req, res) => {
       .from("users")
       .select("id, email, plan, questions_used, subscription_expires_at, last_reset")
       .eq("id", req.user.id)
-      .single();
+      .maybeSingle();
 
     if (error || !user) {
       return res.status(404).json({ message: "User not found" });
