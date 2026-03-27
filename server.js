@@ -180,26 +180,35 @@ app.post("/login", async (req, res) => {
     .from("users")
     .select("*")
     .eq("email", email)
-    .single();
+    .maybeSingle();
 
-  if (!user || !user.verified)
-    return res.json({ message: "Invalid login" });
+  if (!user) {
+    return res.status(401).json({ message: "User not found" });
+  }
 
-  if (!(await bcrypt.compare(password, user.password)))
-    return res.json({ message: "Wrong password" });
+  if (!user.verified) {
+    return res.status(403).json({ message: "Please verify your email" });
+  }
 
-  res.json({
-  token: jwt.sign(
-    { id: user.id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  ),
-  plan: user.plan
+  const valid = await bcrypt.compare(password, user.password);
+
+  if (!valid) {
+    return res.status(401).json({ message: "Wrong password" });
+  }
+
+  return res.json({
+    token: jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    ),
+    plan: user.plan
+  });
 });
-});
 
-
-// ================== CHAT ==================
+  
+  
+ // ================== CHAT ==================
 app.post("/chat", auth, async (req, res) => {
   try {
     const { message, title, file } = req.body;
