@@ -319,10 +319,11 @@ async function sendMessage() {
   messagesDiv.appendChild(div);
 
   try {
+   const title = text.slice(0, 30);
     const res = await fetch(`${API}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}` },
-     const title = text.slice(0, 30);
+     
      body: JSON.stringify({
   message: isInterviewMode
     ? `You are an interviewer. Ask me questions interactively like a real interview. Start now.\nUser: ${text}`
