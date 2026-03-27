@@ -326,6 +326,7 @@ async function sendMessage() {
   message: isInterviewMode
     ? `You are an interviewer. Ask me questions interactively like a real interview. Start now.\nUser: ${text}`
     : text,
+        title: title,
   file: lastUploadedFile || null,
   lang: /[\u0600-\u06FF]/.test(text) ? "ar" : "en"
 })
