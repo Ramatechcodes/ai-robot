@@ -514,7 +514,7 @@ async function loadChatHistory() {
     messages: JSON.parse(c.messages)
   }));
 
-  currentChatIndex = chats.length ? 0 : null;
+  currentChatIndex = chats.length ? chats.length - 1 : null;
   saveChats();
   renderChatHistory();
   renderMessages();
