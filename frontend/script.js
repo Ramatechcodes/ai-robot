@@ -357,9 +357,10 @@ img.style.marginTop = "10px";
 
 
 const cleanReply = (data.reply || data.message || "provided on request")
-  .replace(/#+/g, "")          // remove unwanted hash marks
+  .replace(/#+/g, "")
   .trim();
-   // ✅ Save assistant message properly
+
+// ✅ Save message
 if (currentChatIndex !== null && chats[currentChatIndex]) {
   chats[currentChatIndex].messages.push({
     role: "assistant",
@@ -368,9 +369,7 @@ if (currentChatIndex !== null && chats[currentChatIndex]) {
   saveChats();
 }
 
-// Example: if AI gives image URLs, you can parse and render them
-
-
+// ✅ Render properly (keep this)
 renderAIContent(cleanReply);
 lastAIReply = cleanReply;
 
