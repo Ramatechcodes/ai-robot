@@ -202,7 +202,7 @@ app.post("/login", async (req, res) => {
 // ================== CHAT ==================
 app.post("/chat", auth, async (req, res) => {
   try {
-    const { message, file } = req.body;
+    const { message, title, file } = req.body;
 
     const { data: user } = await supabase
       .from("users")
@@ -405,7 +405,7 @@ if (existingChat) {
     .from("chats")
     .update({
       messages: JSON.stringify(conversation),
-      title: existingChat.title || message.slice(0, 40)
+      title: existingChat.title || title
     })
     .eq("id", existingChat.id);
 } else {
