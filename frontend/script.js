@@ -327,7 +327,7 @@ async function sendMessage() {
   messagesDiv.appendChild(div);
 
   try {
-   const title = text.slice(0, 30);
+   const title = chats[currentChatIndex].title;
     const res = await fetch(`${API}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}` },
@@ -361,13 +361,18 @@ const cleanReply = (data.reply || data.message || "provided on request")
   .trim();
 
 // ✅ Save message
-if (currentChatIndex !== null && chats[currentChatIndex]) {
-  chats[currentChatIndex].messages.push({
-    role: "assistant",
-    content: cleanReply
-  });
-  saveChats();
-}
+ // ✅ CREATE CHAT FIRST if none exists
+  if (currentChatIndex === null || !chats[currentChatIndex]) {
+    chats.push({
+      title: text.slice(0, 30), // 🔥 FIRST MESSAGE AS TITLE
+      messages: []
+    });
+
+    currentChatIndex = chats.length - 1;
+
+    saveChats();
+    renderChatHistory(); // 🔥 SHOW IMMEDIATELY
+  }
 
 // ✅ Render properly (keep this)
 renderAIContent(cleanReply);
